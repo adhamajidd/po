@@ -307,7 +307,7 @@ class PurchaseOrder(models.Model):
     @api.onchange('order_line')
     def _onchange_order_line(self):
         """Reset approval state ketika order line berubah"""
-        super()._onchange_order_line()
+
         if self.approval_state not in ['draft', 'rejected']:
             self.approval_state = 'draft'
             self.approval_level = False
