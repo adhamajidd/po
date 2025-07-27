@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
         
-        <!-- Demo Users dengan Approval Roles -->
+        <!-- Demo Users dengan Approval Roles dan Email -->
         <record id="demo_user_manager" model="res.users">
             <field name="name">Demo Manager</field>
             <field name="login">demo.manager</field>
@@ -10,6 +10,7 @@
             <field name="password">demo123</field>
             <field name="approval_role">manager</field>
             <field name="groups_id" eval="[(4, ref('majid_purchase_approval.group_purchase_manager'))]"/>
+            <field name="signature">--\nDemo Manager\nPurchase Department</field>
         </record>
         
         <record id="demo_user_dept_head" model="res.users">
@@ -19,6 +20,7 @@
             <field name="password">demo123</field>
             <field name="approval_role">dept_head</field>
             <field name="groups_id" eval="[(4, ref('majid_purchase_approval.group_purchase_dept_head'))]"/>
+            <field name="signature">--\nDemo Department Head\nOperations Department</field>
         </record>
         
         <record id="demo_user_cfo" model="res.users">
@@ -28,6 +30,17 @@
             <field name="password">demo123</field>
             <field name="approval_role">cfo</field>
             <field name="groups_id" eval="[(4, ref('majid_purchase_approval.group_purchase_cfo'))]"/>
+            <field name="signature">--\nDemo CFO\nFinance Department</field>
+        </record>
+        
+        <record id="demo_user_purchase" model="res.users">
+            <field name="name">Demo Purchase User</field>
+            <field name="login">demo.purchase</field>
+            <field name="email">demo.purchase@example.com</field>
+            <field name="password">demo123</field>
+            <field name="approval_role" eval="False"/>
+            <field name="groups_id" eval="[(4, ref('majid_purchase_approval.group_purchase_approval_user'))]"/>
+            <field name="signature">--\nDemo Purchase User\nProcurement Team</field>
         </record>
         
         <!-- Demo Vendor -->
@@ -70,7 +83,7 @@
             <field name="state">manager_approval</field>
             <field name="approval_level">manager</field>
             <field name="approval_threshold">low</field>
-            <field name="submitted_by" ref="demo_user_manager"/>
+            <field name="submitted_by" ref="demo_user_purchase"/>
             <field name="submitted_date" eval="DateTime.now()"/>
         </record>
         
@@ -87,7 +100,7 @@
             <field name="state">dept_head_approval</field>
             <field name="approval_level">dept_head</field>
             <field name="approval_threshold">medium</field>
-            <field name="submitted_by" ref="demo_user_manager"/>
+            <field name="submitted_by" ref="demo_user_purchase"/>
             <field name="submitted_date" eval="DateTime.now()"/>
         </record>
         
@@ -104,7 +117,7 @@
             <field name="state">cfo_approval</field>
             <field name="approval_level">cfo</field>
             <field name="approval_threshold">high</field>
-            <field name="submitted_by" ref="demo_user_manager"/>
+            <field name="submitted_by" ref="demo_user_purchase"/>
             <field name="submitted_date" eval="DateTime.now()"/>
         </record>
         
@@ -122,7 +135,7 @@
             <field name="state">purchase</field>
             <field name="approval_level" eval="False"/>
             <field name="approval_threshold">low</field>
-            <field name="submitted_by" ref="demo_user_manager"/>
+            <field name="submitted_by" ref="demo_user_purchase"/>
             <field name="submitted_date" eval="DateTime.now()"/>
             <field name="approved_by_manager" ref="demo_user_manager"/>
             <field name="approved_date_manager" eval="DateTime.now()"/>
@@ -143,7 +156,7 @@
             <field name="state">rejected</field>
             <field name="approval_level" eval="False"/>
             <field name="approval_threshold">medium</field>
-            <field name="submitted_by" ref="demo_user_manager"/>
+            <field name="submitted_by" ref="demo_user_purchase"/>
             <field name="submitted_date" eval="DateTime.now()"/>
             <field name="rejected_by" ref="demo_user_dept_head"/>
             <field name="rejected_date" eval="DateTime.now()"/>

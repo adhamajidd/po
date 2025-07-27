@@ -134,13 +134,16 @@ class PurchaseOrder(models.Model):
         self.state = 'manager_approval'
         self.submitted_by = self.env.user
         self.submitted_date = fields.Datetime.now()
-        self._send_approval_notification()
         
-        # Log di chatter
-        self.message_post(
-            body=_('Purchase Order di-submit untuk approval Manager oleh %s') % self.env.user.name,
-            subject=_('PO Submitted for Manager Approval')
-        )
+        # Log aktivitas
+        self._log_approval_activity('submit', self.env.user, 
+                                   'Nilai total: %s, Threshold: %s' % (
+                                       format_amount(self.env, self.amount_total, self.currency_id),
+                                       self.approval_threshold
+                                   ))
+        
+        # Kirim email notification (jika di-enable)
+        self._send_approval_notification()
     
     def _submit_for_dept_head_approval(self):
         """Submit untuk approval department head"""
@@ -149,13 +152,16 @@ class PurchaseOrder(models.Model):
         self.state = 'dept_head_approval'
         self.submitted_by = self.env.user
         self.submitted_date = fields.Datetime.now()
-        self._send_approval_notification()
         
-        # Log di chatter
-        self.message_post(
-            body=_('Purchase Order di-submit untuk approval Department Head oleh %s') % self.env.user.name,
-            subject=_('PO Submitted for Department Head Approval')
-        )
+        # Log aktivitas
+        self._log_approval_activity('submit', self.env.user, 
+                                   'Nilai total: %s, Threshold: %s' % (
+                                       format_amount(self.env, self.amount_total, self.currency_id),
+                                       self.approval_threshold
+                                   ))
+        
+        # Kirim email notification (jika di-enable)
+        self._send_approval_notification()
     
     def _submit_for_cfo_approval(self):
         """Submit untuk approval CFO"""
@@ -164,13 +170,16 @@ class PurchaseOrder(models.Model):
         self.state = 'cfo_approval'
         self.submitted_by = self.env.user
         self.submitted_date = fields.Datetime.now()
-        self._send_approval_notification()
         
-        # Log di chatter
-        self.message_post(
-            body=_('Purchase Order di-submit untuk approval CFO oleh %s') % self.env.user.name,
-            subject=_('PO Submitted for CFO Approval')
-        )
+        # Log aktivitas
+        self._log_approval_activity('submit', self.env.user, 
+                                   'Nilai total: %s, Threshold: %s' % (
+                                       format_amount(self.env, self.amount_total, self.currency_id),
+                                       self.approval_threshold
+                                   ))
+        
+        # Kirim email notification (jika di-enable)
+        self._send_approval_notification()
     
     # Override button_approve untuk custom approval flow
     def button_approve(self, force=False):
@@ -189,20 +198,14 @@ class PurchaseOrder(models.Model):
                 if len(approval_flow) == 1:
                     order.write({'state': 'purchase', 'date_approve': fields.Datetime.now()})
                     order.approval_level = False
-                    order.message_post(
-                        body=_('Purchase Order di-approve oleh Manager %s') % self.env.user.name,
-                        subject=_('PO Approved by Manager')
-                    )
+                    order._log_approval_activity('approve', self.env.user, 'Final approval - PO menjadi Purchase Order')
                 else:
                     # Lanjut ke level berikutnya
                     next_level = approval_flow[1]  # dept_head
                     order.approval_level = next_level
                     order.state = 'dept_head_approval'
+                    order._log_approval_activity('approve', self.env.user, 'Menunggu approval Department Head')
                     order._send_approval_notification()
-                    order.message_post(
-                        body=_('Purchase Order di-approve oleh Manager %s. Menunggu approval Department Head') % self.env.user.name,
-                        subject=_('PO Approved by Manager - Waiting for Department Head')
-                    )
                     
             elif current_level == 'dept_head':
                 order.approved_by_dept_head = self.env.user
@@ -210,11 +213,8 @@ class PurchaseOrder(models.Model):
                 # Lanjut ke CFO
                 order.approval_level = 'cfo'
                 order.state = 'cfo_approval'
+                order._log_approval_activity('approve', self.env.user, 'Menunggu approval CFO')
                 order._send_approval_notification()
-                order.message_post(
-                    body=_('Purchase Order di-approve oleh Department Head %s. Menunggu approval CFO') % self.env.user.name,
-                    subject=_('PO Approved by Department Head - Waiting for CFO')
-                )
                 
             elif current_level == 'cfo':
                 order.approved_by_cfo = self.env.user
@@ -222,10 +222,7 @@ class PurchaseOrder(models.Model):
                 # Final approval
                 order.write({'state': 'purchase', 'date_approve': fields.Datetime.now()})
                 order.approval_level = False
-                order.message_post(
-                    body=_('Purchase Order di-approve oleh CFO %s') % self.env.user.name,
-                    subject=_('PO Approved by CFO')
-                )
+                order._log_approval_activity('approve', self.env.user, 'Final approval - PO menjadi Purchase Order')
         
         return {}
     
@@ -323,6 +320,48 @@ class PurchaseOrder(models.Model):
                 # Jangan crash aplikasi jika email gagal dikirim
                 pass
     
+    def _log_approval_activity(self, action, user, details=""):
+        """Log aktivitas approval di chatter untuk testing tanpa email"""
+        self.ensure_one()
+        
+        # Buat log message yang informatif
+        if action == 'submit':
+            message = _('Purchase Order di-submit untuk approval %s oleh %s. %s') % (
+                self.approval_level.replace('_', ' ').title(), 
+                user.name, 
+                details
+            )
+            subject = _('PO Submitted for %s Approval') % self.approval_level.replace('_', ' ').title()
+            
+        elif action == 'approve':
+            message = _('Purchase Order di-approve oleh %s (%s). %s') % (
+                user.name, 
+                self.approval_level.replace('_', ' ').title(),
+                details
+            )
+            subject = _('PO Approved by %s') % self.approval_level.replace('_', ' ').title()
+            
+        elif action == 'reject':
+            message = _('Purchase Order di-reject oleh %s (%s). Alasan: %s') % (
+                user.name, 
+                self.approval_level.replace('_', ' ').title(),
+                details
+            )
+            subject = _('PO Rejected by %s') % self.approval_level.replace('_', ' ').title()
+            
+        else:
+            message = _('Aktivitas approval: %s oleh %s. %s') % (action, user.name, details)
+            subject = _('PO Approval Activity')
+        
+        # Post message ke chatter
+        self.message_post(
+            body=message,
+            subject=subject,
+            message_type='notification'
+        )
+        
+        _logger.info('Log approval activity: %s', message)
+    
     @api.model
     def _get_approval_domain(self):
         """Domain untuk PO yang perlu diapprove oleh user saat ini"""
@@ -343,6 +382,50 @@ class PurchaseOrder(models.Model):
         domain = self._get_approval_domain()
         return domain
     
+    @api.model
+    def get_my_approval_count(self):
+        """Mendapatkan jumlah PO yang perlu diapprove oleh user saat ini"""
+        domain = self._get_approval_domain()
+        return self.search_count(domain)
+    
+    @api.model
+    def get_approval_summary(self):
+        """Mendapatkan summary approval untuk dashboard"""
+        user = self.env.user
+        
+        # Count berdasarkan level approval
+        manager_count = 0
+        dept_head_count = 0
+        cfo_count = 0
+        
+        if user.has_group('majid_purchase_approval.group_purchase_manager'):
+            manager_count = self.search_count([
+                ('approval_level', '=', 'manager'), 
+                ('state', '=', 'manager_approval')
+            ])
+        
+        if user.has_group('majid_purchase_approval.group_purchase_dept_head'):
+            dept_head_count = self.search_count([
+                ('approval_level', '=', 'dept_head'), 
+                ('state', '=', 'dept_head_approval')
+            ])
+        
+        if user.has_group('majid_purchase_approval.group_purchase_cfo'):
+            cfo_count = self.search_count([
+                ('approval_level', '=', 'cfo'), 
+                ('state', '=', 'cfo_approval')
+            ])
+        
+        total_count = manager_count + dept_head_count + cfo_count
+        
+        return {
+            'total_count': total_count,
+            'manager_count': manager_count,
+            'dept_head_count': dept_head_count,
+            'cfo_count': cfo_count,
+            'has_approvals': total_count > 0
+        }
+    
     def reject_po(self, reason):
         """Reject PO dengan alasan"""
         self.ensure_one()
@@ -353,14 +436,11 @@ class PurchaseOrder(models.Model):
         self.rejected_date = fields.Datetime.now()
         self.approval_level = False
         
-        # Kirim email notification
-        self._send_rejection_notification(reason)
+        # Log aktivitas rejection
+        self._log_approval_activity('reject', self.env.user, reason)
         
-        # Log di chatter
-        self.message_post(
-            body=_('Purchase Order di-reject oleh %s. Alasan: %s') % (self.env.user.name, reason),
-            subject=_('PO Rejected')
-        )
+        # Kirim email notification (jika di-enable)
+        self._send_rejection_notification(reason)
         
         return True
     

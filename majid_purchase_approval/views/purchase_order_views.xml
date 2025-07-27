@@ -2,13 +2,116 @@
 <odoo>
     <data>
         
+        <!-- Dashboard Widget untuk Home Page -->
+        <template id="purchase_approval_dashboard_widget" name="Purchase Approval Dashboard Widget">
+            <div class="o_purchase_approval_dashboard" t-if="widget.get_approval_summary().has_approvals">
+                <div class="alert alert-info" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fa fa-bell"></i> 
+                        Purchase Order Approval Required
+                    </h4>
+                    <p class="mb-0">
+                        Anda memiliki <strong t-esc="widget.get_approval_summary().total_count"/> Purchase Order yang memerlukan approval.
+                    </p>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-md-4" t-if="widget.get_approval_summary().manager_count > 0">
+                            <span class="badge badge-info">
+                                Manager: <t t-esc="widget.get_approval_summary().manager_count"/>
+                            </span>
+                        </div>
+                        <div class="col-md-4" t-if="widget.get_approval_summary().dept_head_count > 0">
+                            <span class="badge badge-warning">
+                                Dept Head: <t t-esc="widget.get_approval_summary().dept_head_count"/>
+                            </span>
+                        </div>
+                        <div class="col-md-4" t-if="widget.get_approval_summary().cfo_count > 0">
+                            <span class="badge badge-success">
+                                CFO: <t t-esc="widget.get_approval_summary().cfo_count"/>
+                            </span>
+                        </div>
+                    </div>
+                    <hr/>
+                    <a href="#" class="btn btn-primary btn-sm" data-action="approval_dashboard">
+                        <i class="fa fa-eye"></i> Lihat Approval Dashboard
+                    </a>
+                </div>
+            </div>
+        </template>
+        
+        <!-- Purchase Order Kanban View untuk Dashboard -->
+        <record id="purchase_order_kanban_approval" model="ir.ui.view">
+            <field name="name">purchase.order.kanban.approval</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_dashboard" sample="1">
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="amount_total"/>
+                    <field name="approval_level"/>
+                    <field name="approval_threshold"/>
+                    <field name="submitted_by"/>
+                    <field name="submitted_date"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="oe_kanban_content">
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                            <strong class="o_kanban_record_title">
+                                                <field name="name"/>
+                                            </strong>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <strong>Vendor:</strong><br/>
+                                                <field name="partner_id"/>
+                                            </div>
+                                            <div class="col-6">
+                                                <strong>Total:</strong><br/>
+                                                <field name="amount_total" widget="monetary"/>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-6">
+                                                <strong>Level:</strong><br/>
+                                                <span class="badge" t-attf-class="badge-#{record.approval_level.raw_value == 'manager' ? 'info' : record.approval_level.raw_value == 'dept_head' ? 'warning' : 'success'}">
+                                                    <field name="approval_level"/>
+                                                </span>
+                                            </div>
+                                            <div class="col-6">
+                                                <strong>Threshold:</strong><br/>
+                                                <span class="badge" t-attf-class="badge-#{record.approval_threshold.raw_value == 'low' ? 'info' : record.approval_threshold.raw_value == 'medium' ? 'warning' : 'danger'}">
+                                                    <field name="approval_threshold"/>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-12">
+                                                <strong>Submitted by:</strong> <field name="submitted_by"/><br/>
+                                                <strong>Date:</strong> <field name="submitted_date"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        
         <!-- Purchase Order Form View -->
         <record id="purchase_order_form_inherit_approval" model="ir.ui.view">
             <field name="name">purchase.order.form.inherit.approval</field>
             <field name="model">purchase.order</field>
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
-
+                
                 <!-- Override status bar untuk menampilkan state approval -->
                 <xpath expr="//field[@name='state']" position="replace">
                     <field name="state" widget="statusbar" 
@@ -131,12 +234,40 @@
             </field>
         </record>
         
+        <!-- Dashboard untuk My Approvals -->
+        <record id="action_purchase_my_approvals_dashboard" model="ir.actions.act_window">
+            <field name="name">My Purchase Approvals Dashboard</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="domain">[('state', 'in', ['manager_approval', 'dept_head_approval', 'cfo_approval'])]</field>
+            <field name="context">{'search_default_my_approvals': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Tidak ada Purchase Order yang memerlukan approval Anda
+                </p>
+            </field>
+        </record>
+        
         <!-- Menu untuk My Approvals -->
         <menuitem id="menu_purchase_my_approvals"
                   name="My Purchase Approvals"
                   parent="purchase.menu_purchase_root"
                   action="action_purchase_my_approvals"
                   sequence="5"/>
+        
+        <!-- Menu Dashboard dengan Counter -->
+        <menuitem id="menu_purchase_my_approvals_dashboard"
+                  name="My Approvals Dashboard"
+                  parent="purchase.menu_purchase_root"
+                  action="action_purchase_my_approvals_dashboard"
+                  sequence="4"/>
+        
+        <!-- Menu untuk Purchase Orders dengan Counter -->
+        <menuitem id="menu_purchase_order_approval"
+                  name="Purchase Orders"
+                  parent="purchase.menu_procurement_management"
+                  action="purchase.action_purchase_order"
+                  sequence="1"/>
         
     </data>
 </odoo> 
