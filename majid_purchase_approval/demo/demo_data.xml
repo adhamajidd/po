@@ -2,27 +2,30 @@
 <odoo>
     <data noupdate="1">
         
-        <!-- Demo Users untuk Testing -->
-        <record id="demo_purchase_manager" model="res.users">
-            <field name="name">Demo Purchase Manager</field>
+        <!-- Demo Users dengan Approval Roles -->
+        <record id="demo_user_manager" model="res.users">
+            <field name="name">Demo Manager</field>
             <field name="login">demo.manager</field>
-            <field name="email">demo.manager@abj.com</field>
+            <field name="email">demo.manager@example.com</field>
+            <field name="password">demo123</field>
             <field name="approval_role">manager</field>
             <field name="groups_id" eval="[(4, ref('majid_purchase_approval.group_purchase_manager'))]"/>
         </record>
         
-        <record id="demo_dept_head" model="res.users">
+        <record id="demo_user_dept_head" model="res.users">
             <field name="name">Demo Department Head</field>
             <field name="login">demo.depthead</field>
-            <field name="email">demo.depthead@abj.com</field>
+            <field name="email">demo.depthead@example.com</field>
+            <field name="password">demo123</field>
             <field name="approval_role">dept_head</field>
             <field name="groups_id" eval="[(4, ref('majid_purchase_approval.group_purchase_dept_head'))]"/>
         </record>
         
-        <record id="demo_cfo" model="res.users">
+        <record id="demo_user_cfo" model="res.users">
             <field name="name">Demo CFO</field>
             <field name="login">demo.cfo</field>
-            <field name="email">demo.cfo@abj.com</field>
+            <field name="email">demo.cfo@example.com</field>
+            <field name="password">demo123</field>
             <field name="approval_role">cfo</field>
             <field name="groups_id" eval="[(4, ref('majid_purchase_approval.group_purchase_cfo'))]"/>
         </record>
@@ -30,30 +33,128 @@
         <!-- Demo Vendor -->
         <record id="demo_vendor" model="res.partner">
             <field name="name">Demo Vendor</field>
-            <field name="email">demo.vendor@example.com</field>
+            <field name="email">vendor@example.com</field>
+            <field name="is_company" eval="True"/>
             <field name="supplier_rank" eval="1"/>
         </record>
         
-        <!-- Demo Products -->
+        <!-- Demo Products dengan harga berbeda untuk testing threshold -->
         <record id="demo_product_low" model="product.product">
             <field name="name">Demo Product Low Value</field>
+            <field name="list_price">1000000</field>
+            <field name="standard_price">800000</field>
             <field name="type">product</field>
-            <field name="list_price" eval="1000000"/>
-            <field name="standard_price" eval="800000"/>
+            <field name="purchase_ok" eval="True"/>
         </record>
         
         <record id="demo_product_medium" model="product.product">
             <field name="name">Demo Product Medium Value</field>
+            <field name="list_price">10000000</field>
+            <field name="standard_price">8000000</field>
             <field name="type">product</field>
-            <field name="list_price" eval="10000000"/>
-            <field name="standard_price" eval="8000000"/>
+            <field name="purchase_ok" eval="True"/>
         </record>
         
         <record id="demo_product_high" model="product.product">
             <field name="name">Demo Product High Value</field>
+            <field name="list_price">25000000</field>
+            <field name="standard_price">20000000</field>
             <field name="type">product</field>
-            <field name="list_price" eval="25000000"/>
-            <field name="standard_price" eval="20000000"/>
+            <field name="purchase_ok" eval="True"/>
+        </record>
+        
+        <!-- Demo Purchase Orders untuk testing -->
+        <record id="demo_po_low" model="purchase.order">
+            <field name="partner_id" ref="demo_vendor"/>
+            <field name="date_order" eval="DateTime.now()"/>
+            <field name="state">manager_approval</field>
+            <field name="approval_level">manager</field>
+            <field name="approval_threshold">low</field>
+            <field name="submitted_by" ref="demo_user_manager"/>
+            <field name="submitted_date" eval="DateTime.now()"/>
+        </record>
+        
+        <record id="demo_po_low_line" model="purchase.order.line">
+            <field name="order_id" ref="demo_po_low"/>
+            <field name="product_id" ref="demo_product_low"/>
+            <field name="product_qty">1</field>
+            <field name="price_unit">3000000</field>
+        </record>
+        
+        <record id="demo_po_medium" model="purchase.order">
+            <field name="partner_id" ref="demo_vendor"/>
+            <field name="date_order" eval="DateTime.now()"/>
+            <field name="state">dept_head_approval</field>
+            <field name="approval_level">dept_head</field>
+            <field name="approval_threshold">medium</field>
+            <field name="submitted_by" ref="demo_user_manager"/>
+            <field name="submitted_date" eval="DateTime.now()"/>
+        </record>
+        
+        <record id="demo_po_medium_line" model="purchase.order.line">
+            <field name="order_id" ref="demo_po_medium"/>
+            <field name="product_id" ref="demo_product_medium"/>
+            <field name="product_qty">1</field>
+            <field name="price_unit">15000000</field>
+        </record>
+        
+        <record id="demo_po_high" model="purchase.order">
+            <field name="partner_id" ref="demo_vendor"/>
+            <field name="date_order" eval="DateTime.now()"/>
+            <field name="state">cfo_approval</field>
+            <field name="approval_level">cfo</field>
+            <field name="approval_threshold">high</field>
+            <field name="submitted_by" ref="demo_user_manager"/>
+            <field name="submitted_date" eval="DateTime.now()"/>
+        </record>
+        
+        <record id="demo_po_high_line" model="purchase.order.line">
+            <field name="order_id" ref="demo_po_high"/>
+            <field name="product_id" ref="demo_product_high"/>
+            <field name="product_qty">1</field>
+            <field name="price_unit">25000000</field>
+        </record>
+        
+        <!-- Demo PO yang sudah di-approve -->
+        <record id="demo_po_approved" model="purchase.order">
+            <field name="partner_id" ref="demo_vendor"/>
+            <field name="date_order" eval="DateTime.now()"/>
+            <field name="state">purchase</field>
+            <field name="approval_level" eval="False"/>
+            <field name="approval_threshold">low</field>
+            <field name="submitted_by" ref="demo_user_manager"/>
+            <field name="submitted_date" eval="DateTime.now()"/>
+            <field name="approved_by_manager" ref="demo_user_manager"/>
+            <field name="approved_date_manager" eval="DateTime.now()"/>
+            <field name="date_approve" eval="DateTime.now()"/>
+        </record>
+        
+        <record id="demo_po_approved_line" model="purchase.order.line">
+            <field name="order_id" ref="demo_po_approved"/>
+            <field name="product_id" ref="demo_product_low"/>
+            <field name="product_qty">1</field>
+            <field name="price_unit">2000000</field>
+        </record>
+        
+        <!-- Demo PO yang di-reject -->
+        <record id="demo_po_rejected" model="purchase.order">
+            <field name="partner_id" ref="demo_vendor"/>
+            <field name="date_order" eval="DateTime.now()"/>
+            <field name="state">rejected</field>
+            <field name="approval_level" eval="False"/>
+            <field name="approval_threshold">medium</field>
+            <field name="submitted_by" ref="demo_user_manager"/>
+            <field name="submitted_date" eval="DateTime.now()"/>
+            <field name="rejected_by" ref="demo_user_dept_head"/>
+            <field name="rejected_date" eval="DateTime.now()"/>
+            <field name="rejection_reason">Budget tidak mencukupi untuk pembelian ini</field>
+        </record>
+        
+        <record id="demo_po_rejected_line" model="purchase.order.line">
+            <field name="order_id" ref="demo_po_rejected"/>
+            <field name="product_id" ref="demo_product_medium"/>
+            <field name="product_qty">2</field>
+            <field name="price_unit">12000000</field>
         </record>
         
     </data>

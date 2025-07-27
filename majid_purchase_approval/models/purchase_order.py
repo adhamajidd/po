@@ -7,17 +7,22 @@ _logger = logging.getLogger(__name__)
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
     
-    # Approval fields
-    approval_state = fields.Selection([
-        ('draft', 'Draft'),
-        ('submitted', 'Submitted for Approval'),
-        ('manager_approved', 'Manager Approved'),
-        ('dept_head_approved', 'Department Head Approved'),
-        ('cfo_approved', 'CFO Approved'),
-        ('rejected', 'Rejected'),
-        ('approved', 'Fully Approved')
-    ], string='Approval State', default='draft', tracking=True)
+    # Override state field untuk menambahkan state approval yang lebih spesifik
+    state = fields.Selection(selection_add=[
+        ('manager_approval', 'Manager Approval'),
+        ('dept_head_approval', 'Department Head Approval'),
+        ('cfo_approval', 'CFO Approval'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected')
+    ], ondelete={
+        'manager_approval': 'set default',
+        'dept_head_approval': 'set default',
+        'cfo_approval': 'set default',
+        'approved': 'set default',
+        'rejected': 'set default'
+    })
     
+    # Approval fields
     approval_level = fields.Selection([
         ('manager', 'Manager'),
         ('dept_head', 'Department Head'),
@@ -40,7 +45,6 @@ class PurchaseOrder(models.Model):
     rejected_date = fields.Datetime(string='Rejection Date', tracking=True)
     
     # Computed fields
-    total_amount = fields.Monetary(string='Total Amount', compute='_compute_total_amount', store=True)
     approval_threshold = fields.Selection([
         ('low', 'Low (< 5M)'),
         ('medium', 'Medium (5M-20M)'),
@@ -51,21 +55,16 @@ class PurchaseOrder(models.Model):
     my_approvals = fields.Boolean(string='My Approvals', compute='_compute_my_approvals', search='_search_my_approvals')
     
     @api.depends('amount_total')
-    def _compute_total_amount(self):
-        for po in self:
-            po.total_amount = po.amount_total
-    
-    @api.depends('total_amount')
     def _compute_approval_threshold(self):
         for po in self:
-            if po.total_amount < 5000000:
+            if po.amount_total < 5000000:
                 po.approval_threshold = 'low'
-            elif po.total_amount <= 20000000:
+            elif po.amount_total <= 20000000:
                 po.approval_threshold = 'medium'
             else:
                 po.approval_threshold = 'high'
     
-    @api.depends('approval_level', 'approval_state')
+    @api.depends('approval_level', 'state')
     def _compute_my_approvals(self):
         """Compute field untuk mengecek apakah PO perlu diapprove oleh user saat ini"""
         for po in self:
@@ -102,95 +101,133 @@ class PurchaseOrder(models.Model):
         
         return False
     
-    def action_submit_for_approval(self):
-        """Submit PO untuk approval"""
+    # Override button_confirm untuk custom approval flow
+    def button_confirm(self):
+        """Override button_confirm untuk custom approval flow"""
+        for order in self:
+            if order.state not in ['draft', 'sent']:
+                continue
+            
+            order.order_line._validate_analytic_distribution()
+            order._add_supplier_to_product()
+            
+            # Custom approval flow berdasarkan nilai total
+            if order.amount_total < 5000000:
+                # Low value - langsung ke Manager
+                order._submit_for_manager_approval()
+            elif order.amount_total <= 20000000:
+                # Medium value - ke Department Head
+                order._submit_for_dept_head_approval()
+            else:
+                # High value - langsung ke CFO
+                order._submit_for_cfo_approval()
+            
+            if order.partner_id not in order.message_partner_ids:
+                order.message_subscribe([order.partner_id.id])
+        
+        return True
+    
+    def _submit_for_manager_approval(self):
+        """Submit untuk approval manager"""
         self.ensure_one()
-        
-        if self.state != 'draft':
-            raise UserError(_('Hanya PO dengan status Draft yang dapat di-submit untuk approval'))
-        
-        if self.approval_state not in ['draft', 'rejected']:
-            raise UserError(_('PO sudah di-submit untuk approval'))
-        
-        # Reset approval fields jika sebelumnya di-reject
-        if self.approval_state == 'rejected':
-            self.rejection_reason = False
-            self.rejected_by = False
-            self.rejected_date = False
-        
-        # Set approval level pertama
-        approval_flow = self._get_approval_flow()
-        if not approval_flow:
-            raise UserError(_('Tidak dapat menentukan flow approval'))
-        
-        self.approval_level = approval_flow[0]
-        self.approval_state = 'submitted'
+        self.approval_level = 'manager'
+        self.state = 'manager_approval'
         self.submitted_by = self.env.user
         self.submitted_date = fields.Datetime.now()
-        
-        # Kirim email notification
         self._send_approval_notification()
         
         # Log di chatter
         self.message_post(
-            body=_('Purchase Order di-submit untuk approval oleh %s') % self.env.user.name,
-            subject=_('PO Submitted for Approval')
+            body=_('Purchase Order di-submit untuk approval Manager oleh %s') % self.env.user.name,
+            subject=_('PO Submitted for Manager Approval')
         )
-        
-        return True
     
-    def action_approve(self):
-        """Approve PO pada level saat ini"""
+    def _submit_for_dept_head_approval(self):
+        """Submit untuk approval department head"""
         self.ensure_one()
+        self.approval_level = 'dept_head'
+        self.state = 'dept_head_approval'
+        self.submitted_by = self.env.user
+        self.submitted_date = fields.Datetime.now()
+        self._send_approval_notification()
         
-        if not self._can_approve():
-            raise AccessError(_('Anda tidak memiliki hak untuk approve PO ini'))
+        # Log di chatter
+        self.message_post(
+            body=_('Purchase Order di-submit untuk approval Department Head oleh %s') % self.env.user.name,
+            subject=_('PO Submitted for Department Head Approval')
+        )
+    
+    def _submit_for_cfo_approval(self):
+        """Submit untuk approval CFO"""
+        self.ensure_one()
+        self.approval_level = 'cfo'
+        self.state = 'cfo_approval'
+        self.submitted_by = self.env.user
+        self.submitted_date = fields.Datetime.now()
+        self._send_approval_notification()
         
-        current_level = self.approval_level
-        approval_flow = self._get_approval_flow()
+        # Log di chatter
+        self.message_post(
+            body=_('Purchase Order di-submit untuk approval CFO oleh %s') % self.env.user.name,
+            subject=_('PO Submitted for CFO Approval')
+        )
+    
+    # Override button_approve untuk custom approval flow
+    def button_approve(self, force=False):
+        """Override button_approve untuk custom approval flow"""
+        self = self.filtered(lambda order: order._approval_allowed())
         
-        # Update approval info
-        if current_level == 'manager':
-            self.approved_by_manager = self.env.user
-            self.approved_date_manager = fields.Datetime.now()
-            self.approval_state = 'manager_approved'
-        elif current_level == 'dept_head':
-            self.approved_by_dept_head = self.env.user
-            self.approved_date_dept_head = fields.Datetime.now()
-            self.approval_state = 'dept_head_approved'
-        elif current_level == 'cfo':
-            self.approved_by_cfo = self.env.user
-            self.approved_date_cfo = fields.Datetime.now()
-            self.approval_state = 'cfo_approved'
-        
-        # Cek apakah ada level approval berikutnya
-        current_index = approval_flow.index(current_level)
-        if current_index + 1 < len(approval_flow):
-            # Masih ada level approval berikutnya
-            next_level = approval_flow[current_index + 1]
-            self.approval_level = next_level
+        for order in self:
+            current_level = order.approval_level
+            approval_flow = order._get_approval_flow()
             
-            # Kirim email notification untuk level berikutnya
-            self._send_approval_notification()
-            
-            # Log di chatter
-            self.message_post(
-                body=_('Purchase Order di-approve oleh %s. Menunggu approval dari %s') % 
-                     (self.env.user.name, next_level.replace('_', ' ').title()),
-                subject=_('PO Approved - Waiting for Next Level')
-            )
-        else:
-            # Approval selesai
-            self.approval_state = 'approved'
-            self.approval_level = False
-            
-            # Log di chatter
-            self.message_post(
-                body=_('Purchase Order telah di-approve sepenuhnya oleh %s') % self.env.user.name,
-                subject=_('PO Fully Approved')
-            )
+            # Update approval info
+            if current_level == 'manager':
+                order.approved_by_manager = self.env.user
+                order.approved_date_manager = fields.Datetime.now()
+                # Jika hanya perlu approval manager, langsung approve
+                if len(approval_flow) == 1:
+                    order.write({'state': 'purchase', 'date_approve': fields.Datetime.now()})
+                    order.approval_level = False
+                    order.message_post(
+                        body=_('Purchase Order di-approve oleh Manager %s') % self.env.user.name,
+                        subject=_('PO Approved by Manager')
+                    )
+                else:
+                    # Lanjut ke level berikutnya
+                    next_level = approval_flow[1]  # dept_head
+                    order.approval_level = next_level
+                    order.state = 'dept_head_approval'
+                    order._send_approval_notification()
+                    order.message_post(
+                        body=_('Purchase Order di-approve oleh Manager %s. Menunggu approval Department Head') % self.env.user.name,
+                        subject=_('PO Approved by Manager - Waiting for Department Head')
+                    )
+                    
+            elif current_level == 'dept_head':
+                order.approved_by_dept_head = self.env.user
+                order.approved_date_dept_head = fields.Datetime.now()
+                # Lanjut ke CFO
+                order.approval_level = 'cfo'
+                order.state = 'cfo_approval'
+                order._send_approval_notification()
+                order.message_post(
+                    body=_('Purchase Order di-approve oleh Department Head %s. Menunggu approval CFO') % self.env.user.name,
+                    subject=_('PO Approved by Department Head - Waiting for CFO')
+                )
+                
+            elif current_level == 'cfo':
+                order.approved_by_cfo = self.env.user
+                order.approved_date_cfo = fields.Datetime.now()
+                # Final approval
+                order.write({'state': 'purchase', 'date_approve': fields.Datetime.now()})
+                order.approval_level = False
+                order.message_post(
+                    body=_('Purchase Order di-approve oleh CFO %s') % self.env.user.name,
+                    subject=_('PO Approved by CFO')
+                )
         
-        return True
+        return {}
     
     def action_reject(self):
         """Reject PO"""
@@ -216,7 +253,7 @@ class PurchaseOrder(models.Model):
         """Cek apakah user saat ini dapat approve/reject PO"""
         self.ensure_one()
         
-        if not self.approval_level:
+        if not self.approval_level or self.state not in ['manager_approval', 'dept_head_approval', 'cfo_approval']:
             return False
         
         current_level = self.approval_level
@@ -269,11 +306,11 @@ class PurchaseOrder(models.Model):
         user = self.env.user
         
         if user.has_group('majid_purchase_approval.group_purchase_manager'):
-            return [('approval_level', '=', 'manager'), ('approval_state', '=', 'submitted')]
+            return [('approval_level', '=', 'manager'), ('state', '=', 'manager_approval')]
         elif user.has_group('majid_purchase_approval.group_purchase_dept_head'):
-            return [('approval_level', '=', 'dept_head'), ('approval_state', 'in', ['submitted', 'manager_approved'])]
+            return [('approval_level', '=', 'dept_head'), ('state', '=', 'dept_head_approval')]
         elif user.has_group('majid_purchase_approval.group_purchase_cfo'):
-            return [('approval_level', '=', 'cfo'), ('approval_state', 'in', ['submitted', 'manager_approved', 'dept_head_approved'])]
+            return [('approval_level', '=', 'cfo'), ('state', '=', 'cfo_approval')]
         
         return [('id', '=', False)]  # Empty domain
     
@@ -287,7 +324,7 @@ class PurchaseOrder(models.Model):
         """Reject PO dengan alasan"""
         self.ensure_one()
         
-        self.approval_state = 'rejected'
+        self.state = 'rejected'
         self.rejection_reason = reason
         self.rejected_by = self.env.user
         self.rejected_date = fields.Datetime.now()
@@ -307,9 +344,8 @@ class PurchaseOrder(models.Model):
     @api.onchange('order_line')
     def _onchange_order_line(self):
         """Reset approval state ketika order line berubah"""
-
-        if self.approval_state not in ['draft', 'rejected']:
-            self.approval_state = 'draft'
+        if self.state not in ['draft', 'cancel', 'rejected']:
+            self.state = 'draft'
             self.approval_level = False
             self.submitted_by = False
             self.submitted_date = False
