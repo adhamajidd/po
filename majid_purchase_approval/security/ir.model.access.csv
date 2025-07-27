@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_purchase_rejection_wizard_user,purchase.rejection.wizard.user,model_purchase_rejection_wizard,majid_purchase_approval.group_purchase_approval_user,1,1,1,0
+access_purchase_rejection_wizard_manager,purchase.rejection.wizard.manager,model_purchase_rejection_wizard,majid_purchase_approval.group_purchase_manager,1,1,1,0
+access_purchase_rejection_wizard_dept_head,purchase.rejection.wizard.dept.head,model_purchase_rejection_wizard,majid_purchase_approval.group_purchase_dept_head,1,1,1,0
+access_purchase_rejection_wizard_cfo,purchase.rejection.wizard.cfo,model_purchase_rejection_wizard,majid_purchase_approval.group_purchase_cfo,1,1,1,0

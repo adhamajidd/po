@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Res Users Form View -->
+        <record id="res_users_form_inherit_approval" model="ir.ui.view">
+            <field name="name">res.users.form.inherit.approval</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='signature']" position="after">
+                    <field name="approval_role"/>
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
+</odoo> 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        
+        <!-- Purchase Manager Group -->
+        <record id="group_purchase_manager" model="res.groups">
+            <field name="name">Purchase Manager</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+            <field name="comment">User yang dapat approve Purchase Order dengan nilai kurang dari IDR 5 juta</field>
+        </record>
+        
+        <!-- Department Head Group -->
+        <record id="group_purchase_dept_head" model="res.groups">
+            <field name="name">Department Head</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+            <field name="comment">User yang dapat approve Purchase Order dengan nilai IDR 5-20 juta</field>
+        </record>
+        
+        <!-- CFO Group -->
+        <record id="group_purchase_cfo" model="res.groups">
+            <field name="name">CFO</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+            <field name="comment">User yang dapat approve Purchase Order dengan nilai lebih dari IDR 20 juta</field>
+        </record>
+        
+        <!-- Purchase Approval User Group -->
+        <record id="group_purchase_approval_user" model="res.groups">
+            <field name="name">Purchase Approval User</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+            <field name="comment">User yang dapat submit Purchase Order untuk approval</field>
+            <field name="implied_ids" eval="[(4, ref('purchase.group_purchase_user'))]"/>
+        </record>
+        
+    </data>
+</odoo> 

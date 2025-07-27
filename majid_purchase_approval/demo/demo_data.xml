@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Demo Users untuk Testing -->
+        <record id="demo_purchase_manager" model="res.users">
+            <field name="name">Demo Purchase Manager</field>
+            <field name="login">demo.manager</field>
+            <field name="email">demo.manager@abj.com</field>
+            <field name="approval_role">manager</field>
+            <field name="groups_id" eval="[(4, ref('majid_purchase_approval.group_purchase_manager'))]"/>
+        </record>
+        
+        <record id="demo_dept_head" model="res.users">
+            <field name="name">Demo Department Head</field>
+            <field name="login">demo.depthead</field>
+            <field name="email">demo.depthead@abj.com</field>
+            <field name="approval_role">dept_head</field>
+            <field name="groups_id" eval="[(4, ref('majid_purchase_approval.group_purchase_dept_head'))]"/>
+        </record>
+        
+        <record id="demo_cfo" model="res.users">
+            <field name="name">Demo CFO</field>
+            <field name="login">demo.cfo</field>
+            <field name="email">demo.cfo@abj.com</field>
+            <field name="approval_role">cfo</field>
+            <field name="groups_id" eval="[(4, ref('majid_purchase_approval.group_purchase_cfo'))]"/>
+        </record>
+        
+        <!-- Demo Vendor -->
+        <record id="demo_vendor" model="res.partner">
+            <field name="name">Demo Vendor</field>
+            <field name="email">demo.vendor@example.com</field>
+            <field name="supplier_rank" eval="1"/>
+        </record>
+        
+        <!-- Demo Products -->
+        <record id="demo_product_low" model="product.product">
+            <field name="name">Demo Product Low Value</field>
+            <field name="type">product</field>
+            <field name="list_price" eval="1000000"/>
+            <field name="standard_price" eval="800000"/>
+        </record>
+        
+        <record id="demo_product_medium" model="product.product">
+            <field name="name">Demo Product Medium Value</field>
+            <field name="type">product</field>
+            <field name="list_price" eval="10000000"/>
+            <field name="standard_price" eval="8000000"/>
+        </record>
+        
+        <record id="demo_product_high" model="product.product">
+            <field name="name">Demo Product High Value</field>
+            <field name="type">product</field>
+            <field name="list_price" eval="25000000"/>
+            <field name="standard_price" eval="20000000"/>
+        </record>
+        
+    </data>
+</odoo> 
