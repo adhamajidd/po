@@ -271,6 +271,11 @@ class PurchaseOrder(models.Model):
         """Kirim email notification untuk approval"""
         self.ensure_one()
         
+        # Cek apakah email notification di-disable
+        if not self.env['ir.config_parameter'].sudo().get_param('majid_purchase_approval.enable_email_notification', 'True') == 'True':
+            _logger.info('Email notification di-disable, skip pengiriman email approval')
+            return
+        
         if not self.approval_level:
             return
         
@@ -282,23 +287,41 @@ class PurchaseOrder(models.Model):
         # Template email
         template = self.env.ref('majid_purchase_approval.email_template_purchase_approval')
         if template and approver.email:
-            template.with_context(
-                approval_level=self.approval_level,
-                approver_email=approver.email,
-                purchase_order=self
-            ).send_mail(self.id, force_send=True)
+            try:
+                template.with_context(
+                    approval_level=self.approval_level,
+                    approver_email=approver.email,
+                    purchase_order=self
+                ).send_mail(self.id, force_send=True)
+                _logger.info('Email approval notification berhasil dikirim ke %s', approver.email)
+            except Exception as e:
+                _logger.error('Gagal mengirim email approval notification: %s', str(e))
+                # Jangan crash aplikasi jika email gagal dikirim
+                # Bisa tambahkan notifikasi di UI jika diperlukan
+                pass
     
     def _send_rejection_notification(self, reason):
         """Kirim email notification untuk rejection"""
         self.ensure_one()
         
+        # Cek apakah email notification di-disable
+        if not self.env['ir.config_parameter'].sudo().get_param('majid_purchase_approval.enable_email_notification', 'True') == 'True':
+            _logger.info('Email notification di-disable, skip pengiriman email rejection')
+            return
+        
         # Template email rejection
         template = self.env.ref('majid_purchase_approval.email_template_purchase_rejection')
         if template and self.submitted_by.email:
-            template.with_context(
-                rejection_reason=reason,
-                purchase_order=self
-            ).send_mail(self.id, force_send=True)
+            try:
+                template.with_context(
+                    rejection_reason=reason,
+                    purchase_order=self
+                ).send_mail(self.id, force_send=True)
+                _logger.info('Email rejection notification berhasil dikirim ke %s', self.submitted_by.email)
+            except Exception as e:
+                _logger.error('Gagal mengirim email rejection notification: %s', str(e))
+                # Jangan crash aplikasi jika email gagal dikirim
+                pass
     
     @api.model
     def _get_approval_domain(self):
