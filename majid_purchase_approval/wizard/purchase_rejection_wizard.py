@@ -10,7 +10,7 @@ class PurchaseRejectionWizard(models.TransientModel):
     rejection_reason = fields.Text(string='Rejection Reason', required=True)
     
     def action_reject(self):
-        """Reject PO dengan alasan yang diberikan"""
+        """Action untuk reject PO dengan alasan"""
         self.ensure_one()
         
         if not self.rejection_reason:
@@ -19,12 +19,12 @@ class PurchaseRejectionWizard(models.TransientModel):
         # Reject PO
         self.purchase_order_id.reject_po(self.rejection_reason)
         
+        # Return action untuk refresh halaman PO
         return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': _('Success'),
-                'message': _('Purchase Order berhasil di-reject'),
-                'type': 'success',
-            }
+            'type': 'ir.actions.act_window',
+            'res_model': 'purchase.order',
+            'res_id': self.purchase_order_id.id,
+            'view_mode': 'form',
+            'target': 'current',
+            'flags': {'initial_mode': 'edit'},
         } 

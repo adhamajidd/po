@@ -4,24 +4,22 @@
     'category': 'Purchase',
     'summary': 'Sistem approval Purchase Order berdasarkan nilai total',
     'description': """
-        Modul ini menambahkan sistem approval otomatis untuk Purchase Order berdasarkan nilai total:
-        - Kurang dari IDR 5 juta: langsung ke Manager
-        - IDR 5-20 juta: ke Department Head, kemudian ke CFO
-        - Lebih dari IDR 20 juta: langsung ke CFO
+        Modul custom untuk Odoo 18 yang menambahkan sistem approval Purchase Order berdasarkan nilai total dengan email notification di setiap tahap approval.
         
         Fitur:
-        - Button Submit for Approval, Approve, dan Reject
-        - Email notification untuk setiap tahap approval
-        - Log aktivitas di chatter
-        - Role-based access control
+            - Approval workflow berdasarkan nilai total PO
+            - State management yang lebih spesifik
+            - Role-based access control
+            - Email notification untuk setiap tahap approval
+            - Logging aktivitas approval di chatter
+            - Dashboard untuk monitoring approval
     """,
     'author': 'Majid',
-    'website': 'https://www.abj.com',
+    'website': 'https://id.linkedin.com/in/adha-syah-majid-7a6b12197',
     'depends': [
         'base',
         'purchase',
         'mail',
-        'hr',
     ],
     'data': [
         'security/purchase_approval_security.xml',
@@ -31,7 +29,6 @@
         'views/res_users_views.xml',
         'wizard/purchase_rejection_wizard_views.xml',
     ],
-    'demo': ['demo/demo_data.xml'],
     'installable': True,
     'application': False,
     'auto_install': False,

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        
-        <!-- Email Template untuk Approval Notification -->
+
         <record id="email_template_purchase_approval" model="mail.template">
             <field name="name">Purchase Order Approval Notification</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
@@ -10,73 +9,74 @@
             <field name="email_from">{{ user.email_formatted }}</field>
             <field name="email_to">{{ ctx.get('approver_email', '') }}</field>
             <field name="body_html" type="html">
-                <div style="margin: 0px; padding: 0px;">
-                    <p>Halo,</p>
-                    <p>Purchase Order <strong>{{ object.name }}</strong> memerlukan approval Anda.</p>
-                    
-                    <h3>Detail Purchase Order:</h3>
-                    <ul>
-                        <li><strong>Nomor PO:</strong> {{ object.name }}</li>
-                        <li><strong>Vendor:</strong> {{ object.partner_id.name }}</li>
-                        <li><strong>Total Amount:</strong> {{ object.currency_id.symbol }}{{ object.amount_total }}</li>
-                        <li><strong>Tanggal Order:</strong> {{ object.date_order }}</li>
-                        <li><strong>Submitted By:</strong> {{ object.submitted_by.name }}</li>
-                        <li><strong>Submitted Date:</strong> {{ object.submitted_date }}</li>
-                    </ul>
-                    
-                    <h3>Approval Level:</h3>
-                    <p>{% if ctx.get('approval_level') == 'manager' %}
-                        Manager Approval
-                    {% elif ctx.get('approval_level') == 'dept_head' %}
-                        Department Head Approval
-                    {% elif ctx.get('approval_level') == 'cfo' %}
-                        CFO Approval
-                    {% endif %}</p>
-                    
-                    <p>Silakan login ke sistem untuk melakukan approval atau rejection terhadap Purchase Order ini.</p>
-                    
-                    <p>Terima kasih,<br/>
-                    {{ user.name }}</p>
+                <div style="margin: 0px; padding: 0px;" t-if="object">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Halo,<br/><br/>
+                        Purchase Order <strong><t t-esc="object.name"/></strong> memerlukan approval Anda.<br/><br/>
+                        
+                        <strong>Detail Purchase Order:</strong><br/>
+                        - Nomor PO: <t t-esc="object.name"/><br/>
+                        - Vendor: <t t-esc="object.partner_id.name"/><br/>
+                        - Total Amount: <t t-esc="object.amount_total" t-options='{"widget": "monetary", "display_currency": object.currency_id}'/><br/>
+                        - Tanggal Order: <t t-esc="format_datetime(object.date_order, tz=user.tz)"/><br/>
+                        - Submitted By: <t t-esc="object.submitted_by.name"/><br/>
+                        - Submitted Date: <t t-esc="format_datetime(object.submitted_date, tz=user.tz)"/><br/>
+                        - Approval Level: <t t-esc="object.approval_level"/><br/><br/>
+                        
+                        Silakan login ke sistem untuk melakukan approval atau rejection terhadap Purchase Order ini.<br/><br/>
+                        
+                        <a t-att-href="object.get_base_url() + '/web#id=' + str(object.id) + '&amp;model=purchase.order&amp;view_type=form'"
+                           style="background-color: #875A7B; padding: 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 13px;">
+                            Review Purchase Order
+                        </a><br/><br/>
+                        
+                        Terima kasih,<br/>
+                        <t t-esc="user.name"/>
+                    </p>
                 </div>
             </field>
-            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
         
-        <!-- Email Template untuk Rejection Notification -->
         <record id="email_template_purchase_rejection" model="mail.template">
             <field name="name">Purchase Order Rejection Notification</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="subject">Purchase Order {{ object.name }} telah di-reject</field>
             <field name="email_from">{{ user.email_formatted }}</field>
-            <field name="email_to">{{ object.submitted_by.email or '' }}</field>
+            <field name="email_to">{{ object.submitted_by.email_formatted }}</field>
             <field name="body_html" type="html">
-                <div style="margin: 0px; padding: 0px;">
-                    <p>Halo,</p>
-                    <p>Purchase Order <strong>{{ object.name }}</strong> telah di-reject.</p>
-                    
-                    <h3>Detail Purchase Order:</h3>
-                    <ul>
-                        <li><strong>Nomor PO:</strong> {{ object.name }}</li>
-                        <li><strong>Vendor:</strong> {{ object.partner_id.name }}</li>
-                        <li><strong>Total Amount:</strong> {{ object.currency_id.symbol }}{{ object.amount_total }}</li>
-                        <li><strong>Tanggal Order:</strong> {{ object.date_order }}</li>
-                        <li><strong>Rejected By:</strong> {{ object.rejected_by.name }}</li>
-                        <li><strong>Rejection Date:</strong> {{ object.rejected_date }}</li>
-                    </ul>
-                    
-                    <h3>Alasan Rejection:</h3>
-                    <p>{{ ctx.get('rejection_reason', 'Tidak ada alasan yang diberikan') }}</p>
-                    
-                    <p>Silakan review dan perbaiki Purchase Order ini sebelum submit ulang untuk approval.</p>
-                    
-                    <p>Terima kasih,<br/>
-                    {{ user.name }}</p>
+                <div style="margin: 0px; padding: 0px;" t-if="object">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Halo <t t-esc="object.submitted_by.name"/>,<br/><br/>
+                        Purchase Order <strong><t t-esc="object.name"/></strong> telah di-reject.<br/><br/>
+                        
+                        <strong>Detail Purchase Order:</strong><br/>
+                        - Nomor PO: <t t-esc="object.name"/><br/>
+                        - Vendor: <t t-esc="object.partner_id.name"/><br/>
+                        - Total Amount: <t t-esc="object.amount_total" t-options='{"widget": "monetary", "display_currency": object.currency_id}'/><br/>
+                        - Tanggal Order: <t t-esc="format_datetime(object.date_order, tz=user.tz)"/><br/>
+                        - Rejected By: <t t-esc="object.rejected_by.name"/><br/>
+                        - Rejection Date: <t t-esc="format_datetime(object.rejected_date, tz=user.tz)"/><br/><br/>
+                        
+                        <strong>Alasan Rejection:</strong><br/>
+                        <div style="background-color: #f8f9fa; padding: 10px; border-left: 4px solid #dc3545;">
+                            <t t-esc="object.rejection_reason"/>
+                        </div><br/>
+                        
+                        Silakan review dan submit ulang Purchase Order jika diperlukan:<br/><br/>
+                        
+                        <a t-att-href="object.get_base_url() + '/web#id=' + str(object.id) + '&amp;model=purchase.order&amp;view_type=form'"
+                           style="background-color: #875A7B; padding: 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 13px;">
+                            Review Purchase Order
+                        </a><br/><br/>
+                        
+                        Terima kasih,<br/>
+                        <t t-esc="user.name"/>
+                    </p>
                 </div>
             </field>
-            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
         
     </data>
-</odoo> 
+</odoo>
