@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_custom_stock_picking" model="ir.actions.report">
+        <field name="name">Laporan Transfer (Custom)</field>
+        
+        <field name="model">stock.picking</field>
+        
+        <field name="report_type">qweb-pdf</field>
+        
+        <field name="report_name">abj_report.template_custom_stock_picking</field>
+        <field name="report_file">abj_report.template_custom_stock_picking</field>
+        
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>
