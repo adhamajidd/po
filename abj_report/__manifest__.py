@@ -6,7 +6,7 @@
     "summary": "New standalone PDF invoice report using QWeb",
     "data": [
         "reports/new_invoice_templates.xml",
-        "views/report_action.xml",
+        # "views/report_action.xml",
     ],
     "installable": True,
     "icon": "abj_report/static/src/img/icon.png",
