@@ -1,0 +1,44 @@
+<odoo>
+  <template id="custom_invoice_qweb_document">
+    <t t-call="web.external_layout">
+      <t t-set="o" t-value="doc"/>
+
+      <div class="page">
+        <h2>Invoice #: <span t-field="o.name"/></h2>
+        <p>Customer: <span t-field="o.partner_id.name"/></p>
+        <p>Date: <span t-field="o.invoice_date"/></p>
+
+        <table class="table table-sm mt32">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th class="text-right">Quantity</th>
+              <th class="text-right">Unit Price</th>
+              <th class="text-right">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr t-foreach="o.invoice_line_ids" t-as="line">
+              <td>
+                <span t-field="line.name"/>
+              </td>
+              <td class="text-right">
+                <span t-field="line.quantity"/>
+              </td>
+              <td class="text-right">
+                <span t-field="line.price_unit"/>
+              </td>
+              <td class="text-right">
+                <span t-field="line.price_subtotal"/>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="text-right mt32">
+          <p><strong>Total:</strong> <span t-field="o.amount_total"/></p>
+        </div>
+      </div>
+    </t>
+  </template>
+</odoo>

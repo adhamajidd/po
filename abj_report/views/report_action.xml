@@ -1,0 +1,12 @@
+
+<odoo>
+  <report
+    id="action_custom_invoice_qweb"
+    model="account.move"
+    string="Custom Invoice PDF"
+    report_type="qweb-pdf"
+    name="custom_invoice_new_report.custom_invoice_qweb_document"
+    file="custom_invoice_new_report.custom_invoice_qweb_document"
+    print_report_name="'Custom Invoice - %s' % (object.name)"
+  />
+</odoo>
