@@ -32,7 +32,7 @@
                                         <small><span t-field="line.product_id.default_code"/></small>
                                     </td>
                                     <td class="text-center">
-                                        <span t-field="line.product_uom_qty"/> <span t-field="line.product_uom_id.name"/>
+                                        <span t-field="line.quantity"/> <span t-field="line.product_uom_id.name"/>
                                     </td>
                                     <td class="text-center">
                                         <span t-field="line.qty_done"/> <span t-field="line.product_uom_id.name"/>
@@ -49,8 +49,7 @@
                                 <strong>Tanggal Selesai:</strong> <span t-field="o.date_done"/>
                             </div>
                         </div>
-
-                        </div>
+                    </div>
                 </t>
             </t>
         </t>
