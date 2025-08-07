@@ -1,0 +1,31 @@
+<!-- custom_invoice_report/reports/custom_invoice_template.xml -->
+<odoo>
+    <template id="report_invoice_multiple" inherit_id="account.report_invoice_document">
+        <!-- <xpath expr="//div[@class='page']" position="inside">
+            <t t-foreach="docs" t-as="doc">
+                <div class="invoice-section">
+                    Customize the content as needed for each invoice
+                    <h2 t-esc="doc.name"/>
+                    <p>Invoice Date: <t t-esc="doc.date_invoice"/></p>
+                    <p>Customer: <t t-esc="doc.partner_id.name"/></p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="doc.invoice_line_ids" t-as="line">
+                                <td t-esc="line.product_id.name"/>
+                                <td t-esc="line.quantity"/>
+                                <td t-esc="line.price_subtotal"/>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </xpath> -->
+    </template>
+</odoo>

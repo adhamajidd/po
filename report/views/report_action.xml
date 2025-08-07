@@ -1,0 +1,12 @@
+<!-- custom_invoice_report/views/invoice_report_action.xml -->
+<odoo>
+    <report 
+        id="action_report_invoice_multiple"
+        model="account.move"
+        string="Multiple Invoices Report"
+        report_type="qweb-pdf"
+        name="custom_invoice_report.report_invoice_multiple"
+        file="custom_invoice_report.report_invoice_multiple"
+        print_report_name="'Invoice Report - ' + object.name"
+    />
+</odoo>
