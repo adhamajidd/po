@@ -10,6 +10,7 @@
     'depends': [
         # Kita ganti 'base' menjadi 'account' karena kita akan bekerja dengan Invoice
         'account',
+        'stock',
     ],
     'data': [
         # Sesuaikan urutan: definisikan report action dulu, baru template-nya
