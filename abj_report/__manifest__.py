@@ -14,6 +14,8 @@
     'data': [
         # Sesuaikan urutan: definisikan report action dulu, baru template-nya
         'reports/custom_invoice_report.xml',
+        'reports/stock_move_report.xml',
+        'reports/stock_move_template.xml',
         'reports/custom_invoice_template.xml',
     ],
     'auto_install': False,
