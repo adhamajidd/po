@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="action_report_custom_invoice" model="report.paperformat">
+    <record id="paperformat_custom_invoice" model="report.paperformat">
         <field name="name">Custom Invoice Paper Format</field>
         <field name="default" eval="True" />
         <field name="format">A4</field>
