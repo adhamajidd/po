@@ -8,7 +8,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <strong>Alamat Tujuan:</strong><br/>
-                                <span t-field="o.partner_id"
+                                <div t-field="o.partner_id"
                                       t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                             </div>
                             <div class="col-5 offset-1 text-end">
@@ -16,8 +16,20 @@
                                 <div t-field="o.picking_type_id" t-options='{"widget": "badge"}'/>
                             </div>
                         </div>
+                        
+                        <div class="row mt-4 mb-4">
+                             <div t-if="o.origin" class="col-6">
+                                <strong>Dokumen Sumber:</strong>
+                                <p t-field="o.origin" class="m-0"/>
+                            </div>
+                            <div class="col-6 text-end">
+                                <strong>Tanggal Pengiriman:</strong>
+                                <p t-if="o.state == 'done'" t-field="o.date_done" class="m-0"/>
+                                <p t-else="" t-field="o.scheduled_date" class="m-0"/>
+                            </div>
+                        </div>
 
-                        <table class="table table-sm mt-4">
+                        <table class="table table-sm" t-if="o.state != 'done'" name="stock_move_table">
                             <thead>
                                 <tr>
                                     <th>Produk</th>
@@ -26,29 +38,46 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr t-foreach="o.move_ids_without_package" t-as="move">
+                                <t t-set="lines" t-value="o.move_ids.filtered(lambda x: x.product_uom_qty)"/>
+                                <tr t-foreach="lines" t-as="move">
                                     <td>
-                                        <span t-field="move.product_id.display_name"/><br/>
-                                        <small><span t-field="move.product_id.default_code"/></small>
+                                        <span t-field="move.product_id.display_name"/>
+                                        <p t-if="move.description_picking" class="m-0 text-muted">
+                                            <small><span t-field="move.description_picking"/></small>
+                                        </p>
                                     </td>
                                     <td class="text-center">
                                         <span t-field="move.product_uom_qty"/> <span t-field="move.product_uom.name"/>
                                     </td>
                                     <td class="text-center">
-                                        <span t-field="move.quantity_done"/> <span t-field="move.product_uom.name"/>
+                                        <span t-field="move.quantity"/> <span t-field="move.product_uom.name"/>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                         
-                        <div class="row mt-4">
-                            <div class="col-6">
-                                <strong>Dokumen Sumber:</strong> <span t-field="o.origin"/>
-                            </div>
-                            <div class="col-6 text-end">
-                                <strong>Tanggal Dijadwalkan:</strong> <span t-field="o.scheduled_date"/>
-                            </div>
-                        </div>
+                        <table class="table table-sm" t-if="o.state == 'done'" name="stock_move_line_table">
+                            <thead>
+                                <tr>
+                                    <th>Produk</th>
+                                    <th class="text-center">Jumlah Selesai</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.move_line_ids_without_package" t-as="line">
+                                    <td>
+                                        <span t-field="line.product_id.display_name"/>
+                                        <p t-if="line.move_id.description_picking" class="m-0 text-muted">
+                                            <small><span t-field="line.move_id.description_picking"/></small>
+                                        </p>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="line.qty_done"/> <span t-field="line.product_uom_id.name"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
                     </div>
                 </t>
             </t>
