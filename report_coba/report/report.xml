@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="report_report_user" model="ir.actions.report">
+    <field name="name">Print Property by User</field>
+    <field name="model">res.users</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">report_coba.report_property_usear</field>
+    <field name="report_file">report_coba.report_property_usear</field>
+    <field name="binding_model_id" ref="base.model_res_users"/>
+    <field name="binding_type">report</field>
+    </record>
+    
+</odoo>
+
