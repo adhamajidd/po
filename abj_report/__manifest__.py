@@ -1,13 +1,21 @@
+# custom_invoice_print/__manifest__.py
+
 {
-    "name": "Abajoo Custom Invoice - New Report",
-    "version": "1.0",
-    "depends": ["account"],
-    "category": "Accounting",
-    "summary": "New standalone PDF invoice report using QWeb",
-    "data": [
-        "reports/new_invoice_templates.xml",
-        # "views/report_action.xml",
+    'name': 'Abajoo Custom Invoice Print',
+    'version': '1.0',
+    'description': 'Menambahkan opsi print custom untuk invoice (modul accounting).',
+    'author': 'Majid Abajoo (disesuaikan oleh Gemini)',
+    'website': 'https://www.adhacompany.com',
+    'license': 'LGPL-3',
+    'depends': [
+        # Kita ganti 'base' menjadi 'account' karena kita akan bekerja dengan Invoice
+        'account',
     ],
-    "installable": True,
-    "icon": "abj_report/static/src/img/icon.png",
+    'data': [
+        # Sesuaikan urutan: definisikan report action dulu, baru template-nya
+        'reports/custom_invoice_report.xml',
+        'reports/custom_invoice_template.xml',
+    ],
+    'auto_install': False,
+    'application': False,
 }

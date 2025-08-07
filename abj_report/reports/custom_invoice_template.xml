@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="template_standalone_invoice">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center">INVOICE</h2>
+                        
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <strong>Kepada Yth:</strong><br/>
+                                <span t-field="o.partner_id.name"/>
+                            </div>
+                            <div class="col-6 text-end">
+                                <strong>Nomor Invoice:</strong> <span t-field="o.name"/><br/>
+                                <strong>Tanggal Invoice:</strong> <span t-field="o.invoice_date" t-options='{"widget": "date"}'/>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm mt-5">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50%;">Produk / Deskripsi</th>
+                                    <th class="text-end">Jumlah</th>
+                                    <th class="text-end">Harga Satuan</th>
+                                    <th class="text-end">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.invoice_line_ids" t-as="line">
+                                    <td><span t-field="line.name"/></td>
+                                    <td class="text-end"><span t-field="line.quantity"/></td>
+                                    <td class="text-end">
+                                        <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row justify-content-end">
+                            <div class="col-4">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Subtotal</strong></td>
+                                        <td class="text-end">
+                                            <span t-field="o.amount_untaxed"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Pajak</strong></td>
+                                        <td class="text-end">
+                                            <span t-field="o.amount_tax"/>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-black">
+                                        <td><strong>Total</strong></td>
+                                        <td class="text-end">
+                                            <span t-field="o.amount_total"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
