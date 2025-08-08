@@ -1,98 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="template_custom_stock_picking">
-        <t t-call="web.html_container">
-            <t t-foreach="docs" t-as="o">
-                <t t-call="web.basic_layout">
-                    <div class="page">
-                        
-                        <div class="row">
-                            <div class="col-8">
-                                <h3><span t-field="o.company_id.name"/></h3>
-                            </div>
-                            <div class="col-4 text-end">
-                                <h3>DELIVERY ORDER (SURAT JALAN)</h3>
-                            </div>
-                        </div>
+        <t t-call="web.basic_layout">
+            <div class="page">
+                
+                <div class="row">
+                    <div class="col-8">
+                        <h3><span t-field="o.company_id.name"/></h3>
+                    </div>
+                    <div class="col-4 text-end">
+                        <h3>DELIVERY ORDER</h3>
+                    </div>
+                </div>
 
-                        <div class="row mt-4">
-                            <div class="col-7">
+                <table class="table table-borderless mt-4" style="width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td style="width: 55%; vertical-align: top; padding: 0;">
                                 <strong>Address:</strong><br/>
                                 <div t-field="o.partner_id"
                                      t-options='{"widget": "contact", "fields": ["name", "address"], "no_marker": True}'/>
-                            </div>
-
-                            <div class="col-5">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <strong>DO No:</strong>
-                                        <p class="m-0" t-field="o.name"/>
-                                    </div>
-                                    <div class="col-12 mt-2">
-                                        <strong>Order Type:</strong>
-                                        <p class="m-0" t-field="o.picking_type_id.name"/>
-                                    </div>
-                                    <div class="col-12 mt-2">
-                                        <strong>Shipping Date:</strong>
-                                        <p class="m-0" t-if="o.state == 'done'" t-field="o.date_done"/>
-                                        <p class="m-0" t-else="" t-field="o.scheduled_date"/>
-                                    </div>
-                                    <div class="col-12 mt-2">
-                                        <strong>Phone:</strong>
-                                        <p class="m-0" t-field="o.partner_id.phone"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <table class="table table-sm mt-4">
-                            <thead>
-                                <tr>
-                                    <th name="th_product"><strong>Product Name</strong></th>
-                                    <th name="th_ordered" class="text-center"><strong>Ordered Product</strong></th>
-                                    <th name="th_delivered" class="text-center"><strong>Delivered</strong></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-if="o.state != 'done'">
-                                    <tr t-foreach="o.move_ids.filtered(lambda x: x.product_uom_qty)" t-as="move">
-                                        <td>
-                                            <span t-field="move.product_id.display_name"/>
-                                        </td>
-                                        <td class="text-center">
-                                            <span t-field="move.product_uom_qty"/> <span t-field="move.product_uom.name" groups="uom.group_uom"/>
-                                        </td>
-                                        <td class="text-center">
-                                            <span t-field="move.quantity"/> <span t-field="move.product_uom.name" groups="uom.group_uom"/>
+                            </td>
+                            <td style="width: 45%; vertical-align: top; padding: 0;">
+                                <table class="table table-borderless table-sm">
+                                    <tr>
+                                        <td style="padding: 0; width: 40%;"><strong>DO No</strong></td>
+                                        <td style="padding: 0; width: 5%;">:</td>
+                                        <td style="padding: 0; width: 55%;"><span t-field="o.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 0;"><strong>Order Type</strong></td>
+                                        <td style="padding: 0;">:</td>
+                                        <td style="padding: 0;"><span t-field="o.picking_type_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 0;"><strong>Shipping Date</strong></td>
+                                        <td style="padding: 0;">:</td>
+                                        <td style="padding: 0;">
+                                            <span t-if="o.state == 'done'" t-field="o.date_done" t-options='{"format": "dd/MM/yyyy"}'/>
+                                            <span t-else="" t-field="o.scheduled_date" t-options='{"format": "dd/MM/yyyy"}'/>
                                         </td>
                                     </tr>
-                                </t>
-                                <t t-if="o.state == 'done'">
-                                    <tr t-foreach="o.move_line_ids_without_package" t-as="line">
-                                        <td>
-                                            <span t-field="line.product_id.display_name"/>
-                                        </td>
-                                        <td class="text-center">
-                                            <span t-field="line.quantity"/> <span t-field="line.product_uom_id.name" groups="uom.group_uom"/>
-                                        </td>
-                                        <td class="text-center">
-                                            <span t-field="line.qty_done"/> <span t-field="line.product_uom_id.name" groups="uom.group_uom"/>
-                                        </td>
+                                    <tr>
+                                        <td style="padding: 0;"><strong>Phone</strong></td>
+                                        <td style="padding: 0;">:</td>
+                                        <td style="padding: 0;"><span t-field="o.partner_id.phone"/></td>
                                     </tr>
-                                </t>
-                            </tbody>
-                        </table>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table class="table table-sm mt-4">
+                    <thead>
+                        <tr>
+                            <th name="th_product"><strong>Product Name</strong></th>
+                            <th name="th_ordered" class="text-center"><strong>Ordered Product</strong></th>
+                            <th name="th_delivered" class="text-center"><strong>Delivered</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-if="o.state != 'done'">
+                            <tr t-foreach="o.move_ids.filtered(lambda x: x.product_uom_qty)" t-as="move">
+                                <td><span t-field="move.product_id.display_name"/></td>
+                                <td class="text-center"><span t-field="move.product_uom_qty"/> <span t-field="move.product_uom.name" groups="uom.group_uom"/></td>
+                                <td class="text-center"><span t-field="move.quantity"/> <span t-field="move.product_uom.name" groups="uom.group_uom"/></td>
+                            </tr>
+                        </t>
+                        <t t-if="o.state == 'done'">
+                            <tr t-foreach="o.move_line_ids_without_package" t-as="line">
+                                <td><span t-field="line.product_id.display_name"/></td>
+                                <td class="text-center"><span t-field="line.quantity"/> <span t-field="line.product_uom_id.name" groups="uom.group_uom"/></td>
+                                <td class="text-center"><span t-field="line.qty_done"/> <span t-field="line.product_uom_id.name" groups="uom.group_uom"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
 
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <strong>Notes:</strong><br/>
-                                <p t-field="o.note"/>
-                            </div>
-                        </div>
-
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <strong>Notes:</strong><br/>
+                        <p t-field="o.note"/>
                     </div>
-                </t>
-            </t>
+                </div>
+
+            </div>
         </t>
     </template>
 </odoo>
