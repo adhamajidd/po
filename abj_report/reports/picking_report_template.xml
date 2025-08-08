@@ -4,9 +4,9 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
                 <pre style="font-family: 'monospace', 'Courier New', Courier; font-size: 10pt; line-height: 1.1;">
-                                DELIVERY ORDER (SURAT JALAN)
-                                <t t-esc="o.company_id.name"/>
-                <t t-esc="(o.company_id.street or '') + ', ' + (o.company_id.street2 or '') + ', ' + (o.company_id.city or '') + ' ' + (o.company_id.zip or '')"/>
+                DELIVERY ORDER (SURAT JALAN)
+                <t t-esc="o.company_id.name"/>
+        <t t-esc="(o.company_id.street or '') + ', ' + (o.company_id.street2 or '') + ', ' + (o.company_id.city or '') + ' ' + (o.company_id.zip or '')"/>
 ----------------------------------------------------------------------------
 DO No        : <t t-esc="o.name.ljust(22)"/>Order Type: <t t-esc="o.picking_type_id.name"/>
 Shipping Date: <t t-esc="o.scheduled_date.strftime('%d/%m/%Y')"/>
