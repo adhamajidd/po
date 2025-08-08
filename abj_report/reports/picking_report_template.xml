@@ -21,14 +21,14 @@ Delivery Address:
 <t t-if="o.state != 'done'">
     <t t-set="i" t-value="1"/>
     <t t-foreach="o.move_ids.filtered(lambda x: x.product_uom_qty)" t-as="move">
-| <t t-esc="str(i).ljust(2)"/> | <t t-esc="move.product_id.name[:29].ljust(29)"/> | <t t-esc="'%.2f' % move.product_uom_qty).rjust(9)"/> | <t t-esc="'%.2f' % move.quantity).rjust(9)"/> |
+| <t t-esc="str(i).ljust(2)"/> | <t t-esc="move.product_id.name[:29].ljust(29)"/> | <t t-esc="('%.2f' % move.product_uom_qty).rjust(9)"/> | <t t-esc="('%.2f' % move.quantity).rjust(9)"/> |
         <t t-set="i" t-value="i+1"/>
     </t>
 </t>
 <t t-if="o.state == 'done'">
     <t t-set="i" t-value="1"/>
     <t t-foreach="o.move_line_ids_without_package" t-as="line">
-| <t t-esc="str(i).ljust(2)"/> | <t t-esc="line.product_id.name[:29].ljust(29)"/> | <t t-esc="'%.2f' % line.quantity).rjust(9)"/> | <t t-esc="'%.2f' % line.qty_done).rjust(9)"/> |
+| <t t-esc="str(i).ljust(2)"/> | <t t-esc="line.product_id.name[:29].ljust(29)"/> | <t t-esc="('%.2f' % line.quantity).rjust(9)"/> | <t t-esc="('%.2f' % line.qty_done).rjust(9)"/> |
         <t t-set="i" t-value="i+1"/>
     </t>
 </t>
