@@ -18,7 +18,7 @@
                             <tbody>
                                 <tr>
                                     <td style="width: 55%; vertical-align: top; padding: 0;">
-                                        <strong>Partner</strong><br/>
+                                        <strong>Partner:</strong>
                                         <div t-field="o.partner_id.name"/>
                                         <strong>Address:</strong><br/>
                                         <div t-field="o.partner_id"
