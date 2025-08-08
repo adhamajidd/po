@@ -11,7 +11,7 @@
 DO No        : <t t-esc="o.name.ljust(22)"/>Order Type: <t t-esc="o.picking_type_id.name"/>
 Shipping Date: <t t-esc="o.scheduled_date.strftime('%d/%m/%Y')"/>
 ----------------------------------------------------------------------------
-Partner      : <t t-esc="o.partner_id.name.ljust(22)"/>Phone: <t t-esc="o.partner_id.phone or ''"/>
+Partner      : <t t-esc="(o.partner_id.name or '').ljust(22)"/>Phone: <t t-esc="o.partner_id.phone or ''"/>
 Delivery Address:
 <t t-esc="o.partner_id.street or ''"/>
 <t t-esc="(o.partner_id.street2 or '') + ' ' + (o.partner_id.city or '') + ' ' + (o.partner_id.zip or '')"/>
@@ -34,7 +34,7 @@ Delivery Address:
 </t>
 ----------------------------------------------------------------------------
 Notes:
-<t t-esc="o.note"/>
+<t t-esc="o.note or ''"/>
 ----------------------------------------------------------------------------
                 </pre>
             </t>
