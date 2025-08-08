@@ -7,10 +7,7 @@
                     <div class="page">
                         
                         <div class="row">
-                            <div class="col-8">
-                                <h3><span t-field="o.company_id.name"/></h3>
-                            </div>
-                            <div class="col-4 text-end">
+                            <div class="text-center">
                                 <h3>DELIVERY ORDER</h3>
                             </div>
                         </div>
@@ -19,6 +16,7 @@
                             <tbody>
                                 <tr>
                                     <td style="width: 55%; vertical-align: top; padding: 0;">
+                                        <span t-field="o.company_id.name"/>
                                         <strong>Address:</strong><br/>
                                         <div t-field="o.partner_id"
                                              t-options='{"widget": "contact", "fields": ["name", "address"], "no_marker": True}'/>
