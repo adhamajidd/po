@@ -93,7 +93,7 @@
                         <div class="row mt-4">
                             <div class="col-12">
                                 Ref Pembayaran:
-                                <p t-field="o.note"/>
+                                <p t-field="o.name"/>
                             </div>
                         </div>
                     </div>
