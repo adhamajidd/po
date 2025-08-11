@@ -20,7 +20,7 @@
                                     <td style="width: 55%; vertical-align: top; padding: 0;">
                                         Partner:
                                         <span t-field="o.partner_id.name"/> <br/>
-                                        Address:<br/>
+                                        Address:
                                         <span t-raw="(o.partner_id.street or '') + ' ' + (o.partner_id.street2 or '') + ' ' + (o.partner_id.city or '') + ' ' + (o.partner_id.zip or '') + ' ' + (o.partner_id.country_id.name or '')"/>
 
                                     </td>
