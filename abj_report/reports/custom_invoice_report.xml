@@ -9,6 +9,7 @@
         
         <field name="report_name">abj_report.template_standalone_invoice</field>
         <field name="report_file">abj_report.template_standalone_invoice</field>
+        <field name="paperformat_id" ref="abj_report.paperformat_a5_margin10"/>
         
         <field name="binding_model_id" ref="account.model_account_move"/>
         <field name="binding_type">report</field>
