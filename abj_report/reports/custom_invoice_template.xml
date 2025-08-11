@@ -92,8 +92,8 @@
 
                         <div class="row mt-4">
                             <div class="col-12">
-                                Notes:<br/>
-                                <p t-field="o.note"/>
+                                Notes:
+                                <p t-field="o.name"/>
                             </div>
                         </div>
                     </div>
