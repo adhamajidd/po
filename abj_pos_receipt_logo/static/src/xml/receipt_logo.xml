@@ -28,22 +28,24 @@
                     
                     <!-- Transaction Details -->
                     <div style="margin: 0 10px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-                            <span style="text-align: left;">Tanggal</span>
-                            <span style="text-align: right;"><t t-esc="props.data.date" /></span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-                            <span style="text-align: left;">Kasir</span>
-                            <span style="text-align: right;"><t t-esc="props.data.cashier" /></span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-                            <span style="text-align: left;">Transaksi</span>
-                            <span style="text-align: right;"><t t-esc="props.data.trackingNumber" /></span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-                            <span style="text-align: left;">Customer</span>
-                            <span style="text-align: right;">Walk-In Customer</span>
-                        </div>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="text-align: left; padding-bottom: 3px;">Tanggal</td>
+                                <td style="text-align: right; padding-bottom: 3px;"><t t-esc="props.data.date" /></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; padding-bottom: 3px;">Kasir</td>
+                                <td style="text-align: right; padding-bottom: 3px;"><t t-esc="props.data.cashier" /></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; padding-bottom: 3px;">Transaksi</td>
+                                <td style="text-align: right; padding-bottom: 3px;"><t t-esc="props.data.trackingNumber" /></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; padding-bottom: 3px;">Customer</td>
+                                <td style="text-align: right; padding-bottom: 3px;">Walk-In Customer</td>
+                            </tr>
+                        </table>
                     </div>
                     
                     <!-- Separator -->
