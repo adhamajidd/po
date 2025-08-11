@@ -21,8 +21,8 @@
                                         Partner:
                                         <span t-field="o.partner_id.name"/> <br/>
                                         Address:<br/>
-                                        <div t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}' 
-                                              t-raw="o.partner_id.contact_address.replace('\n', ' ')"/>
+                                        <span t-raw="o.partner_id.street + ' ' + o.partner_id.street2 + ' ' + o.partner_id.city + ' ' + o.partner_id.zip + ' ' + o.partner_id.country_id.name"/>
+
                                     </td>
                                     <td style="width: 45%; vertical-align: top; padding: 0;">
                                         <table class="table table-borderless table-sm">
