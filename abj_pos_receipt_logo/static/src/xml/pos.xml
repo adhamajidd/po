@@ -44,18 +44,16 @@
         <xpath expr="//div[hasclass('pos-receipt-amount', 'receipt-total')]" position="replace">
             <div class="payment-section" style="font-size: 8pt;">
                 <!-- Subtotal -->
-                <div class="pos-receipt-amount d-flex justify-content-between">
+                <div class="pos-receipt-amount d-flex justify-content-between" style="margin-bottom: 5px;">
                     <span>Subtotal</span>
                     <span t-esc="props.formatCurrency(props.data.taxTotals.order_sign * props.data.taxTotals.order_total)"/>
                 </div>
-                <div class="text-center" style="margin: 1px -10px;">---------------------------------</div>
                 
                 <!-- Total -->
-                <div class="pos-receipt-amount receipt-total d-flex justify-content-between">
+                <div class="pos-receipt-amount receipt-total d-flex justify-content-between" style="margin-bottom: 5px;">
                     <span>TOTAL</span>
                     <span t-esc="props.formatCurrency(props.data.taxTotals.order_sign * props.data.taxTotals.order_total)"/>
                 </div>
-                <div class="text-center" style="margin: 1px -10px;">---------------------------------</div>
                 
                 <!-- Bayar Tunai -->
                 <div class="paymentlines d-flex justify-content-between">
