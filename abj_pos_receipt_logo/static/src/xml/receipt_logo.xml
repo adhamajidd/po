@@ -37,9 +37,6 @@
                                 <td style="text-align: left; padding: 1px 0;">Kasir : <t t-esc="props.data.cashier"/></td>
                                 <td style="text-align: right; padding: 1px 0;"><t t-esc="props.data.trackingNumber"/></td>
                             </tr>
-                            <tr>
-                                <td colspan="2" style="text-align: left; padding: 1px 0;">Customer : Walk-In Customer</td>
-                            </tr>
                         </table>
                     </div>
                     

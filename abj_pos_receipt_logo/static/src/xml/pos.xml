@@ -62,6 +62,16 @@
             <span style="font-size: 8pt;">Bayar Tunai</span>
         </xpath>
 
+        <!-- Tambahkan CHANGE -->
+        <xpath expr="//div[@class='pos-receipt-amount receipt-change']" position="replace">
+            <div class="pos-receipt-amount receipt-change" style="font-size: 8pt;">
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Kembalian</span>
+                    <span t-esc="props.formatCurrency(props.data.order_change)"/>
+                </div>
+            </div>
+        </xpath>
+
     </t>
 
 
