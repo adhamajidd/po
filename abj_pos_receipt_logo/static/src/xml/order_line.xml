@@ -12,15 +12,19 @@
                 </div>
 
                 <div class="d-flex justify-content-end fw-bolder">
-                    <div class="text-start" style="width: 4em;">
+                    <div class="text-end" style="width: 3em;">
                         <t t-esc="line.qty" />
+                    </div>
+                    <div class="text-center" style="width: 2em;">
                         <span>x</span>
                     </div>
-                    <div class="text-center" style="width: 7em;">
-                        <t t-esc="line.unitPrice" />
+                    <div class="text-end" style="width: 5em;">
+                        <t t-esc="line.unitPrice.toString().replace('$', '')" />
+                    </div>
+                    <div class="text-center" style="width: 2em;">
                         <span>=</span>
                     </div>
-                    <div class="text-end" style="width: 8em;">
+                    <div class="text-end" style="width: 6em;">
                         <t t-esc="line.price" />
                     </div>
                 </div>
