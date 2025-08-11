@@ -5,7 +5,13 @@
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.basic_layout">
                     <div class="page">
-                        <h2 class="text-center">INVOICE</h2>
+                        <div class="row">
+                            <div class="text-center">
+                                INVOICE
+                                <br/>
+                                <span t-field="o.company_id.name"/>
+                            </div>
+                        </div>
 
                         <table class="table table-borderless mt-4" style="width: 100%;">
                             <tbody>
@@ -87,7 +93,7 @@
                         <div class="row mt-4">
                             <div class="col-12">
                                 Notes:<br/>
-                                <p t-field="o.narration"/>
+                                <p t-field="o.note"/>
                             </div>
                         </div>
                     </div>
