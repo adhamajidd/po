@@ -40,36 +40,34 @@
         </xpath>
 
         <!-- Ubah ukuran font total -->
+        <!-- Bagian pembayaran -->
         <xpath expr="//div[hasclass('pos-receipt-amount', 'receipt-total')]" position="replace">
             <div class="payment-section" style="font-size: 8pt;">
+                <!-- Subtotal -->
                 <div class="pos-receipt-amount d-flex justify-content-between">
                     <span>Subtotal</span>
                     <span t-esc="props.formatCurrency(props.data.taxTotals.order_sign * props.data.taxTotals.order_total)"/>
                 </div>
                 <div class="text-center" style="margin: 1px -10px;">---------------------------------</div>
+                
+                <!-- Total -->
                 <div class="pos-receipt-amount receipt-total d-flex justify-content-between">
                     <span>TOTAL</span>
                     <span t-esc="props.formatCurrency(props.data.taxTotals.order_sign * props.data.taxTotals.order_total)"/>
                 </div>
                 <div class="text-center" style="margin: 1px -10px;">---------------------------------</div>
-            </div>
-        </xpath>
-
-        <xpath expr="//div[@class='pos-receipt-amount receipt-total']" position="after">
-        </xpath>
-
-        <xpath expr="//div[hasclass('paymentlines')]" position="replace">
-            <div class="paymentlines d-flex justify-content-between" style="font-size: 8pt;">
-                <span>Bayar Tunai</span>
-                <span t-esc="props.formatCurrency(line.amount)"/>
-            </div>
-        </xpath>
-
-        <!-- Tambahkan Kembalian -->
-        <xpath expr="//div[@class='pos-receipt-amount receipt-change']" position="replace">
-            <div class="pos-receipt-amount receipt-change d-flex justify-content-between" style="font-size: 8pt;">
-                <span>Kembalian</span>
-                <span t-esc="props.formatCurrency(props.data.order_change)"/>
+                
+                <!-- Bayar Tunai -->
+                <div class="paymentlines d-flex justify-content-between">
+                    <span>Bayar Tunai</span>
+                    <span t-esc="props.formatCurrency(props.data.paymentlines[0].amount)"/>
+                </div>
+                
+                <!-- Kembalian -->
+                <div class="pos-receipt-amount receipt-change d-flex justify-content-between">
+                    <span>Kembalian</span>
+                    <span t-esc="props.formatCurrency(props.data.order_change)"/>
+                </div>
             </div>
         </xpath>
 
