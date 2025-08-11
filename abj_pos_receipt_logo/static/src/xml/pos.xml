@@ -17,8 +17,7 @@
         <!-- Mengubah footer dengan format yang diinginkan -->
         <xpath expr="//div[@class='pos-receipt-order-data']" position="replace">
             <div class="pos-receipt-order-data">
-                <div style="margin: 1px -10px;">.......................................</div>
-                <div style="text-align: center; font-weight: bold; margin: 5px 0; font-family: Arial, sans-serif; font-size: 8pt;">
+                <div style="text-align: center; font-weight: bold; margin: 10px 0; font-family: Arial, sans-serif; font-size: 8pt;">
                     *** TERIMA KASIH ATAS KUNJUNGAN ANDA ***
                 </div>
                 <div style="text-align: center; margin: 2px 0; font-family: Arial, sans-serif; font-size: 8pt;">
@@ -27,7 +26,6 @@
                 <div style="text-align: center; margin: 2px 0; font-family: Arial, sans-serif; font-size: 8pt;">
                     dikembalikan kecuali cacat produk
                 </div>
-                <div style="margin: 1px -10px;">.......................................</div>
             </div>
         </xpath>
         
@@ -61,9 +59,9 @@
                     <span t-esc="props.formatCurrency(props.data.paymentlines[0].amount)"/>
                 </div>
                 
-                <!-- Kembalian -->
+                <!-- Kembalian (hanya muncul sekali) -->
                 <div class="pos-receipt-amount receipt-change d-flex justify-content-between">
-                    <span>Kembalian</span>
+                    <span>CHANGE</span>
                     <span t-esc="props.formatCurrency(props.data.order_change)"/>
                 </div>
             </div>
