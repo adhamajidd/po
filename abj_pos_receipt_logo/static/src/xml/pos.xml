@@ -43,12 +43,12 @@
         <!-- Ubah ukuran font total -->
         <xpath expr="//div[hasclass('pos-receipt-amount', 'receipt-total')]" position="replace">
             <div>
-                <div class="pos-receipt-amount" style="font-size: 10pt;">
+                <div class="pos-receipt-amount" style="font-size: 8pt;">
                     Subtotal
                     <span t-esc="props.formatCurrency(props.data.taxTotals.order_sign * props.data.taxTotals.order_total)" class="pos-receipt-right-align"/>
                 </div>
                 <div class="text-center">--------------------------------</div>
-                <div class="pos-receipt-amount receipt-total" style="font-size: 10pt;">
+                <div class="pos-receipt-amount receipt-total" style="font-size: 8pt;">
                     TOTAL
                     <span t-esc="props.formatCurrency(props.data.taxTotals.order_sign * props.data.taxTotals.order_total)" class="pos-receipt-right-align"/>
                 </div>
@@ -60,7 +60,7 @@
         </xpath>
 
         <xpath expr="//div[hasclass('paymentlines')]//t[@t-esc='line.name']" position="replace">
-            Bayar Tunai
+            <span style="font-size: 8pt;">Bayar Tunai</span>
         </xpath>
 
     </t>
