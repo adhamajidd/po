@@ -41,10 +41,13 @@
             <div t-if="false"/>
         </xpath>
 
+        <!-- Ubah style garis pemisah -->
+        <xpath expr="//div[@class='text-center']" position="attributes">
+            <attribute name="style">margin: 5px -10px;</attribute>
+        </xpath>
+
         <!-- Ubah ukuran font total -->
-        <!-- Bagian pembayaran -->
         <xpath expr="//div[hasclass('pos-receipt-amount', 'receipt-total')]" position="replace">
-            <div style="text-align: center; margin: 5px -10px;">--------------------------------</div>
             <div class="pos-receipt-amount receipt-total" style="font-size: 9pt;">
                 <span>TOTAL</span>
                 <span t-esc="props.formatCurrency(props.data.taxTotals.order_sign * props.data.taxTotals.order_total)" class="pos-receipt-right-align"/>
