@@ -27,66 +27,36 @@
                     <div style="margin: 10px 0; border-top: 1px dashed #000;"></div>
                     
                     <!-- Transaction Details -->
-                    <div style="text-align: left; margin-left: 20px;">
-                        <div style="margin-bottom: 3px;">
-                            <span style="display: inline-block; width: 80px;">Tanggal</span>
-                            <span>: <t t-esc="props.data.date" /></span>
+                    <div style="margin: 0 10px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                            <span style="text-align: left;">Tanggal</span>
+                            <span style="text-align: right;"><t t-esc="props.data.date" /></span>
                         </div>
-                        <div style="margin-bottom: 3px;">
-                            <span style="display: inline-block; width: 80px;">Kasir</span>
-                            <span>: <t t-esc="props.data.cashier" /></span>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                            <span style="text-align: left;">Kasir</span>
+                            <span style="text-align: right;"><t t-esc="props.data.cashier" /></span>
                         </div>
-                        <div style="margin-bottom: 3px;">
-                            <span style="display: inline-block; width: 80px;">Transaksi</span>
-                            <span>: <t t-esc="props.data.trackingNumber" /></span>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                            <span style="text-align: left;">Transaksi</span>
+                            <span style="text-align: right;"><t t-esc="props.data.trackingNumber" /></span>
                         </div>
-                        <div style="margin-bottom: 3px;">
-                            <span style="display: inline-block; width: 80px;">Customer</span>
-                            <span>: Walk-In Customer</span>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                            <span style="text-align: left;">Customer</span>
+                            <span style="text-align: right;">Walk-In Customer</span>
                         </div>
                     </div>
                     
                     <!-- Separator -->
+                    <!-- <div style="margin: 10px 0; border-top: 1px dashed #000;"></div>
+                    <table style="width:100%; font-size:12px;">
+                        <tr>
+                            <th style="text-align:left;">Item</th>
+                            <th style="text-align:center;">Qty</th>
+                            <th style="text-align:right;">Harga</th>
+                            <th style="text-align:right;">Total</th>
+                        </tr>
+                    </table> -->
                     <div style="margin: 10px 0; border-top: 1px dashed #000;"></div>
-                    
-                    <!-- Item Header -->
-                    <!-- <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 8pt;">
-                        <span style="flex: 2; text-align: left;">Item</span>
-                        <span style="flex: 1; text-align: center;">Qty</span>
-                        <span style="flex: 1; text-align: right;">Harga</span>
-                        <span style="flex: 1; text-align: right;">Total</span>
-                    </div>
-                    <div style="margin: 5px 0; border-top: 1px dashed #000;"></div> -->
-
-                    <!-- Total Section -->
-                    <div class="pos-receipt-amount" style="font-size: 8pt; margin-top: 10px;">
-                        <div style="display: flex; justify-content: space-between;">
-                            <span>Subtotal</span>
-                            <span t-esc="props.formatCurrency(props.data.subtotal)" class="pos-receipt-right-align"/>
-                        </div>
-                        <div style="margin: 5px 0; border-top: 1px dashed #000;"></div>
-                        <div style="display: flex; justify-content: space-between; font-weight: bold;">
-                            <span>TOTAL</span>
-                            <span t-esc="props.formatCurrency(props.data.total)" class="pos-receipt-right-align"/>
-                        </div>
-                        <div style="margin: 5px 0; border-top: 1px dashed #000;"></div>
-                        <div style="display: flex; justify-content: space-between;">
-                            <span style="font-size: 8pt;">Bayar Tunai</span>
-                            <span t-esc="props.formatCurrency(props.data.paymentAmount)" class="pos-receipt-right-align"/>
-                        </div>
-                    </div>
-
-                    <!-- Thank You Message -->
-                    <div style="margin: 10px 0; border-top: 1px dashed #000;"></div>
-                    <div style="text-align: center; font-weight: bold; margin: 10px 0; font-family: Arial, sans-serif; font-size: 9px;">
-                        *** TERIMA KASIH ATAS KUNJUNGAN ANDA ***
-                    </div>
-                    <div style="text-align: center; margin: 5px 0; font-family: Arial, sans-serif; font-size: 9px;">
-                        Barang yang dibeli tidak dapat
-                    </div>
-                    <div style="text-align: center; margin: 5px 0; font-family: Arial, sans-serif; font-size: 9px;">
-                        dikembalikan kecuali cacat produk
-                    </div>
                 </div>
             </div>
         </xpath>

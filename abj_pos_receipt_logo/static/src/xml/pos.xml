@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
     
-
     <t t-name="custom_pos_receipt_for_pos.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
         <!-- Menghilangkan bagian pajak dari receipt -->
         <xpath expr="//div[@class='pos-receipt-taxes']" position="replace">

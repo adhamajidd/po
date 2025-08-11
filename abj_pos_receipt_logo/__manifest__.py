@@ -20,6 +20,7 @@ settings and does not use the default company logo.
         'point_of_sale._assets_pos': [
             'abj_pos_receipt_logo/static/src/js/models.js',
             'abj_pos_receipt_logo/static/src/xml/navbar_logo.xml',
+            'abj_pos_receipt_logo/static/src/xml/pos.xml',
             'abj_pos_receipt_logo/static/src/xml/receipt_logo.xml',
             'abj_pos_receipt_logo/static/src/xml/order_line.xml',
         ],
