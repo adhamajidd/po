@@ -18,6 +18,7 @@
         'reports/picking_report_action.xml',
         'reports/picking_report_template.xml',
         'reports/custom_invoice_template.xml',
+        'data/paperformat.xml',
     ],
     'auto_install': False,
     'application': False,
