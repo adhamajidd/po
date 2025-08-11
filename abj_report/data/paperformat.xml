@@ -3,7 +3,7 @@
         <field name="name">A5 Margin Top 10mm</field>
         <field name="default" eval="False"/>
         <field name="format">A5</field>
-        <field name="orientation">Landscape</field>
+        <field name="orientation">Portrait</field>
         <field name="margin_top">10</field>
         <field name="margin_bottom">15</field>
         <field name="margin_left">10</field>
