@@ -17,17 +17,17 @@
         <!-- Mengubah footer dengan format yang diinginkan -->
         <xpath expr="//div[@class='pos-receipt-order-data']" position="replace">
             <div class="pos-receipt-order-data">
-                <div style="margin: 10px 0; border-top: 1px dashed #000;"></div>
-                <br/>
-                <div style="text-align: center; font-weight: bold; margin: 10px 0; font-family: Arial, sans-serif; font-size: 9px;">
+                <div style="margin: 1px -10px;">.......................................</div>
+                <div style="text-align: center; font-weight: bold; margin: 5px 0; font-family: Arial, sans-serif; font-size: 8pt;">
                     *** TERIMA KASIH ATAS KUNJUNGAN ANDA ***
                 </div>
-                <div style="text-align: center; margin: 5px 0; font-family: Arial, sans-serif; font-size: 9px;">
+                <div style="text-align: center; margin: 2px 0; font-family: Arial, sans-serif; font-size: 8pt;">
                     Barang yang dibeli tidak dapat
                 </div>
-                <div style="text-align: center; margin: 5px 0; font-family: Arial, sans-serif; font-size: 9px;">
+                <div style="text-align: center; margin: 2px 0; font-family: Arial, sans-serif; font-size: 8pt;">
                     dikembalikan kecuali cacat produk
                 </div>
+                <div style="margin: 1px -10px;">.......................................</div>
             </div>
         </xpath>
         
@@ -41,34 +41,35 @@
 
         <!-- Ubah ukuran font total -->
         <xpath expr="//div[hasclass('pos-receipt-amount', 'receipt-total')]" position="replace">
-            <div>
-                <div class="pos-receipt-amount" style="font-size: 8pt;">
-                    Subtotal
-                    <span t-esc="props.formatCurrency(props.data.taxTotals.order_sign * props.data.taxTotals.order_total)" class="pos-receipt-right-align"/>
+            <div class="payment-section" style="font-size: 8pt;">
+                <div class="pos-receipt-amount d-flex justify-content-between">
+                    <span>Subtotal</span>
+                    <span t-esc="props.formatCurrency(props.data.taxTotals.order_sign * props.data.taxTotals.order_total)"/>
                 </div>
-                <div style="margin: 2px -10px;">--------------------------------</div>
-                <div class="pos-receipt-amount receipt-total" style="font-size: 8pt;">
-                    TOTAL
-                    <span t-esc="props.formatCurrency(props.data.taxTotals.order_sign * props.data.taxTotals.order_total)" class="pos-receipt-right-align"/>
+                <div class="text-center" style="margin: 1px -10px;">---------------------------------</div>
+                <div class="pos-receipt-amount receipt-total d-flex justify-content-between">
+                    <span>TOTAL</span>
+                    <span t-esc="props.formatCurrency(props.data.taxTotals.order_sign * props.data.taxTotals.order_total)"/>
                 </div>
-                <div style="margin: 2px -10px;">--------------------------------</div>
+                <div class="text-center" style="margin: 1px -10px;">---------------------------------</div>
             </div>
         </xpath>
 
         <xpath expr="//div[@class='pos-receipt-amount receipt-total']" position="after">
         </xpath>
 
-        <xpath expr="//div[hasclass('paymentlines')]//t[@t-esc='line.name']" position="replace">
-            <span style="font-size: 8pt;">Bayar Tunai</span>
+        <xpath expr="//div[hasclass('paymentlines')]" position="replace">
+            <div class="paymentlines d-flex justify-content-between" style="font-size: 8pt;">
+                <span>Bayar Tunai</span>
+                <span t-esc="props.formatCurrency(line.amount)"/>
+            </div>
         </xpath>
 
-        <!-- Tambahkan CHANGE -->
+        <!-- Tambahkan Kembalian -->
         <xpath expr="//div[@class='pos-receipt-amount receipt-change']" position="replace">
-            <div class="pos-receipt-amount receipt-change" style="font-size: 8pt;">
-                <div style="display: flex; justify-content: space-between;">
-                    <span>Kembalian</span>
-                    <span t-esc="props.formatCurrency(props.data.order_change)"/>
-                </div>
+            <div class="pos-receipt-amount receipt-change d-flex justify-content-between" style="font-size: 8pt;">
+                <span>Kembalian</span>
+                <span t-esc="props.formatCurrency(props.data.order_change)"/>
             </div>
         </xpath>
 
