@@ -6,8 +6,8 @@
             <img/>
         </xpath>
         <xpath expr="." position="replace">
-            <div class="d-flex flex-column align-items-center">
-                <div class="pos-receipt-contact" style="text-align: center; font-family: Arial, sans-serif; font-size: 12px;">
+            <div class="d-flex flex-column" style="margin: 0; padding: 0;">
+                <div class="pos-receipt-contact" style="text-align: center; font-family: Arial, sans-serif; font-size: 12px; margin: 0; padding: 0;">
                     <!-- Company Name -->
                     <div style="font-weight: bold; font-size: 12px;" t-esc="props.data.company.name" />
                     
@@ -24,27 +24,23 @@
                     </div>
                     
                     <!-- Separator -->
-                    <div style="margin: 10px 0; border-top: 1px dashed #000;"></div>
+                    <div style="margin: 3px 0; border-top: 1px dashed #000;"></div>
                     
                     <!-- Transaction Details -->
-                    <div style="margin: 0 10px;">
-                        <div style="border-bottom: 1px dashed #000; margin-bottom: 5px;"></div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-                            <div>
-                                <t t-esc="props.data.date.split(' ')[0]"/>
-                            </div>
-                            <div>
-                                <t t-esc="props.data.date.split(' ')[1]"/>
-                            </div>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-                            <div>Kasir : <t t-esc="props.data.cashier"/></div>
-                            <div><t t-esc="props.data.trackingNumber"/></div>
-                        </div>
-                        <div style="margin-bottom: 3px;">
-                            Customer : Walk-In Customer
-                        </div>
-                        <div style="border-bottom: 1px dashed #000; margin-top: 5px;"></div>
+                    <div style="margin: 0; padding: 0;">
+                        <table style="width: 100%; border-spacing: 0;">
+                            <tr>
+                                <td style="text-align: left; padding: 1px 0;"><t t-esc="props.data.date.split(' ')[0]"/></td>
+                                <td style="text-align: right; padding: 1px 0;"><t t-esc="props.data.date.split(' ')[1]"/></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; padding: 1px 0;">Kasir : <t t-esc="props.data.cashier"/></td>
+                                <td style="text-align: right; padding: 1px 0;"><t t-esc="props.data.trackingNumber"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align: left; padding: 1px 0;">Customer : Walk-In Customer</td>
+                            </tr>
+                        </table>
                     </div>
                     
                     <!-- Separator -->
@@ -57,7 +53,7 @@
                             <th style="text-align:right;">Total</th>
                         </tr>
                     </table> -->
-                    <div style="margin: 10px 0; border-top: 1px dashed #000;"></div>
+                    <div style="margin: 3px 0; border-top: 1px dashed #000;"></div>
                 </div>
             </div>
         </xpath>
