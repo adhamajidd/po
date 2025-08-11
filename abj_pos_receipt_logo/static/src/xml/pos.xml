@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    
+
+    <t t-name="custom_pos_receipt_for_pos.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <!-- Menghilangkan bagian pajak dari receipt -->
+        <xpath expr="//div[@class='pos-receipt-taxes']" position="replace">
+        </xpath>
+        
+        <!-- Alternatif: Menghilangkan hanya tag <p> yang berisi "Powered by Odoo" -->
+        <xpath expr="//p[text()='Powered by Odoo']" position="replace">
+        </xpath>
+        
+        <!-- Menghilangkan footer yang mungkin ada dari modul lain -->
+        <xpath expr="//div[@class='pos-receipt-center-align']" position="replace">
+        </xpath>
+        
+        <!-- Mengubah footer dengan format yang diinginkan -->
+        <xpath expr="//div[@class='pos-receipt-order-data']" position="replace">
+            <div class="pos-receipt-order-data">
+                <div style="margin: 10px 0; border-top: 1px dashed #000;"></div>
+                <br/>
+                <div style="text-align: center; font-weight: bold; margin: 10px 0; font-family: Arial, sans-serif; font-size: 9px;">
+                    *** TERIMA KASIH ATAS KUNJUNGAN ANDA ***
+                </div>
+                <div style="text-align: center; margin: 5px 0; font-family: Arial, sans-serif; font-size: 9px;">
+                    Barang yang dibeli tidak dapat
+                </div>
+                <div style="text-align: center; margin: 5px 0; font-family: Arial, sans-serif; font-size: 9px;">
+                    dikembalikan kecuali cacat produk
+                </div>
+            </div>
+        </xpath>
+        
+        <!-- Menghilangkan tanggal di footer -->
+        <xpath expr="//div[@id='order-date']" position="replace">
+        </xpath>
+
+        <xpath expr="//div[@class='pos-receipt-order-data'][.//div[@t-esc='props.data.name']]" position="replace">
+            <div t-if="false"/>
+        </xpath>
+
+        <!-- Ubah ukuran font total -->
+        <xpath expr="//div[hasclass('pos-receipt-amount', 'receipt-total')]" position="replace">
+            <div>
+                <div class="pos-receipt-amount" style="font-size: 10pt;">
+                    Subtotal
+                    <span t-esc="props.formatCurrency(props.data.taxTotals.order_sign * props.data.taxTotals.order_total)" class="pos-receipt-right-align"/>
+                </div>
+                <div class="text-center">--------------------------------</div>
+                <div class="pos-receipt-amount receipt-total" style="font-size: 10pt;">
+                    TOTAL
+                    <span t-esc="props.formatCurrency(props.data.taxTotals.order_sign * props.data.taxTotals.order_total)" class="pos-receipt-right-align"/>
+                </div>
+                <div class="text-center">--------------------------------</div>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@class='pos-receipt-amount receipt-total']" position="after">
+        </xpath>
+
+        <xpath expr="//div[hasclass('paymentlines')]//t[@t-esc='line.name']" position="replace">
+            Bayar Tunai
+        </xpath>
+
+    </t>
+
+
+</templates>

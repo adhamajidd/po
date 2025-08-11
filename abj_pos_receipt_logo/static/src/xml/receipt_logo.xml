@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="point_of_sale.template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension" owl="1">
+
+        <xpath expr="//img" position="replace">
+            <img/>
+        </xpath>
+        <xpath expr="." position="replace">
+            <div class="d-flex flex-column align-items-center">
+                <div class="pos-receipt-contact" style="text-align: center; font-family: Arial, sans-serif; font-size: 12px;">
+                    <!-- Company Name -->
+                    <div style="font-weight: bold; font-size: 12px;" t-esc="props.data.company.name" />
+                    
+                    <!-- Address - using company data -->
+                    <div t-if="props.data.company.street" t-esc="props.data.company.street" />
+                    <div t-if="props.data.company.city and props.data.company.state_id">
+                        <t t-esc="props.data.company.city" /> <t t-esc="props.data.company.state_id.name" /> <t t-esc="props.data.company.zip" />
+                    </div>
+                    <div t-if="props.data.company.country_id" t-esc="props.data.company.country_id.name" />
+                    
+                    <!-- Phone -->
+                    <div t-if="props.data.company.phone" style="margin-top: 5px;">
+                        Tel: <t t-esc="props.data.company.phone" />
+                    </div>
+                    
+                    <!-- Separator -->
+                    <div style="margin: 10px 0; border-top: 1px dashed #000;"></div>
+                    
+                    <!-- Transaction Details -->
+                    <div style="text-align: left; margin-left: 20px;">
+                        <div style="margin-bottom: 3px;">
+                            <span style="display: inline-block; width: 80px;">Tanggal</span>
+                            <span>: <t t-esc="props.data.date" /></span>
+                        </div>
+                        <div style="margin-bottom: 3px;">
+                            <span style="display: inline-block; width: 80px;">Kasir</span>
+                            <span>: <t t-esc="props.data.cashier" /></span>
+                        </div>
+                        <div style="margin-bottom: 3px;">
+                            <span style="display: inline-block; width: 80px;">Transaksi</span>
+                            <span>: <t t-esc="props.data.trackingNumber" /></span>
+                        </div>
+                        <div style="margin-bottom: 3px;">
+                            <span style="display: inline-block; width: 80px;">Customer</span>
+                            <span>: Walk-In Customer</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Separator -->
+                    <div style="margin: 10px 0; border-top: 1px dashed #000;"></div>
+                    <table style="width:100%; font-size:12px;">
+                        <tr>
+                            <th style="text-align:left;">Item</th>
+                            <th style="text-align:center;">Qty</th>
+                            <th style="text-align:right;">Harga</th>
+                            <th style="text-align:right;">Total</th>
+                        </tr>
+                    </table>
+                    <div style="margin: 10px 0; border-top: 1px dashed #000;"></div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>
