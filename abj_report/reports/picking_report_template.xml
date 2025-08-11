@@ -4,11 +4,11 @@
         <t t-call="web.html_container">
             <t t-call="web.basic_layout">
                 <t t-foreach="docs" t-as="o">
-                    <div class="page" style="size: Custom;">
+                    <div class="page">
                         
                         <div class="row">
                             <div class="text-center">
-                                <h3>DELIVERY ORDER</h3>
+                                DELIVERY ORDER
                                 <br/>
                                 <span t-field="o.company_id.name"/>
                             </div>
