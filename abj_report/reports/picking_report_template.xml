@@ -10,7 +10,7 @@
                             <div class="text-center">
                                 <h3>DELIVERY ORDER</h3>
                                 <br/>
-                                <span style="font-weight: bold;" t-field="o.company_id.name"/>
+                                <span t-field="o.company_id.name"/>
                             </div>
                         </div>
 
@@ -18,26 +18,26 @@
                             <tbody>
                                 <tr>
                                     <td style="width: 55%; vertical-align: top; padding: 0;">
-                                        <span style="font-weight: bold;">Partner:</span>
-                                        <span t-field="o.partner_id.name"/><br/>
-                                        <span style="font-weight: bold;">Address:</span>
+                                        <strong>Partner:</strong>
+                                        <span t-field="o.partner_id.name"/>
+                                        Address:<br/>
                                         <div t-field="o.partner_id"
                                              t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
                                     </td>
                                     <td style="width: 45%; vertical-align: top; padding: 0;">
                                         <table class="table table-borderless table-sm">
                                             <tr>
-                                                <td style="padding: 0; width: 40%;"><span style="font-weight: bold;">DO No</span></td>
+                                                <td style="padding: 0; width: 40%;">DO No</td>
                                                 <td style="padding: 0; width: 5%;">:</td>
                                                 <td style="padding: 0; width: 55%;"><span t-field="o.name"/></td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 0;"><span style="font-weight: bold;">Order Type</span></td>
+                                                <td style="padding: 0;">Order Type</td>
                                                 <td style="padding: 0;">:</td>
                                                 <td style="padding: 0;"><span t-field="o.picking_type_id.name"/></td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 0;"><span style="font-weight: bold;">Shipping Date</span></td>
+                                                <td style="padding: 0;">Shipping Date</td>
                                                 <td style="padding: 0;">:</td>
                                                 <td style="padding: 0;">
                                                     <span t-if="o.state == 'done'" t-field="o.date_done" t-options='{"format": "dd/MM/yyyy"}'/>
@@ -45,7 +45,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 0;"><span style="font-weight: bold;">Phone</span></td>
+                                                <td style="padding: 0;">Phone</td>
                                                 <td style="padding: 0;">:</td>
                                                 <td style="padding: 0;"><span t-field="o.partner_id.phone"/></td>
                                             </tr>
@@ -58,9 +58,9 @@
                         <table class="table table-sm mt-4">
                             <thead>
                                 <tr>
-                                    <th name="th_product"><span style="font-weight: bold;">Product Name</span></th>
-                                    <th name="th_ordered" class="text-center"><span style="font-weight: bold;">Ordered Product</span></th>
-                                    <th name="th_delivered" class="text-center"><span style="font-weight: bold;">Delivered</span></th>
+                                    <th name="th_product">Product Name</th>
+                                    <th name="th_ordered" class="text-center">Ordered Product</th>
+                                    <th name="th_delivered" class="text-center">Delivered</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -83,7 +83,7 @@
 
                         <div class="row mt-4">
                             <div class="col-12">
-                                <span style="font-weight: bold;">Notes:</span><br/>
+                                Notes:<br/>
                                 <p t-field="o.note"/>
                             </div>
                         </div>
