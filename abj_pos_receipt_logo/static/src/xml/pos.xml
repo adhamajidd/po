@@ -17,7 +17,11 @@
         <!-- Mengubah footer dengan format yang diinginkan -->
         <xpath expr="//div[@class='pos-receipt-order-data']" position="replace">
             <div class="pos-receipt-order-data">
-                <div style="text-align: center; font-weight: bold; margin: 10px 0; font-family: Arial, sans-serif; font-size: 8pt;">
+                <br/>
+                <br/>
+                <br/>
+                
+                <div style="text-align: center; margin: 10px 0; font-family: Arial, sans-serif; font-size: 8pt;">
                     *** TERIMA KASIH ATAS KUNJUNGAN ANDA ***
                 </div>
                 <div style="text-align: center; margin: 2px 0; font-family: Arial, sans-serif; font-size: 8pt;">
@@ -40,7 +44,7 @@
         <!-- Ubah ukuran font total -->
         <!-- Bagian pembayaran -->
         <xpath expr="//div[hasclass('pos-receipt-amount', 'receipt-total')]" position="replace">
-            <div class="pos-receipt-amount receipt-total" style="font-size: 8pt;">
+            <div class="pos-receipt-amount receipt-total" style="font-size: 9pt;">
                 <span>TOTAL</span>
                 <span t-esc="props.formatCurrency(props.data.taxTotals.order_sign * props.data.taxTotals.order_total)" class="pos-receipt-right-align"/>
             </div>
@@ -48,8 +52,8 @@
 
         <!-- Ubah payment lines -->
         <xpath expr="//div[hasclass('paymentlines')]" position="replace">
-            <div class="paymentlines" style="font-size: 8pt;" t-foreach="props.data.paymentlines" t-as="line" t-key="line_index">
-                <span>Bayar Tunai</span>
+            <div class="paymentlines" style="font-size: 9pt;" t-foreach="props.data.paymentlines" t-as="line" t-key="line_index">
+                <span>CASH</span>
                 <span t-esc="props.formatCurrency(line.amount)" class="pos-receipt-right-align"/>
             </div>
         </xpath>
@@ -60,7 +64,7 @@
 
         <!-- Tambahkan change dengan ukuran font yang dikontrol -->
         <xpath expr="//div[hasclass('paymentlines')]" position="after">
-            <div t-if="props.data.show_change" class="pos-receipt-amount receipt-change" style="font-size: 8pt;">
+            <div t-if="props.data.show_change" class="pos-receipt-amount receipt-change" style="font-size: 9pt;">
                 <span>CHANGE</span>
                 <span t-esc="props.formatCurrency(props.data.order_change)" class="pos-receipt-right-align"/>
             </div>
