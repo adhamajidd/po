@@ -46,12 +46,12 @@
                     Subtotal
                     <span t-esc="props.formatCurrency(props.data.taxTotals.order_sign * props.data.taxTotals.order_total)" class="pos-receipt-right-align"/>
                 </div>
-                <div class="text-center">--------------------------------</div>
+                <div style="margin: 2px -10px;">--------------------------------</div>
                 <div class="pos-receipt-amount receipt-total" style="font-size: 8pt;">
                     TOTAL
                     <span t-esc="props.formatCurrency(props.data.taxTotals.order_sign * props.data.taxTotals.order_total)" class="pos-receipt-right-align"/>
                 </div>
-                <div class="text-center">--------------------------------</div>
+                <div style="margin: 2px -10px;">--------------------------------</div>
             </div>
         </xpath>
 
