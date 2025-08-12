@@ -58,24 +58,24 @@
                         <table class="table table-sm mt-4">
                             <thead>
                                 <tr>
-                                    <th name="th_product">Product Name</th>
-                                    <th name="th_ordered" class="text-center">Ordered Product</th>
-                                    <th name="th_delivered" class="text-center">Delivered</th>
+                                    <th name="th_product" style="width: 60%;">Product Name</th>
+                                    <th name="th_ordered" class="text-center" style="width: 20%;">Ordered Product</th>
+                                    <th name="th_delivered" class="text-center" style="width: 20%;">Delivered</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <t t-if="o.state != 'done'">
                                     <tr t-foreach="o.move_ids.filtered(lambda x: x.product_uom_qty)" t-as="move">
-                                        <td><span t-field="move.product_id.display_name"/></td>
-                                        <td class="text-center"><span t-field="move.product_uom_qty"/> <span t-field="move.product_uom.name" groups="uom.group_uom"/></td>
-                                        <td class="text-center"><span t-field="move.quantity"/> <span t-field="move.product_uom.name" groups="uom.group_uom"/></td>
+                                        <td style="width: 60%;"><span t-field="move.product_id.display_name"/></td>
+                                        <td class="text-center" style="width: 20%;"><span t-field="move.product_uom_qty"/> <span t-field="move.product_uom.name" groups="uom.group_uom"/></td>
+                                        <td class="text-center" style="width: 20%;"><span t-field="move.quantity"/> <span t-field="move.product_uom.name" groups="uom.group_uom"/></td>
                                     </tr>
                                 </t>
                                 <t t-if="o.state == 'done'">
                                     <tr t-foreach="o.move_line_ids_without_package" t-as="line">
-                                        <td><span t-field="line.product_id.display_name"/></td>
-                                        <td class="text-center"><span t-field="line.quantity"/> <span t-field="line.product_uom_id.name" groups="uom.group_uom"/></td>
-                                        <td class="text-center"><span t-field="line.qty_done"/> <span t-field="line.product_uom_id.name" groups="uom.group_uom"/></td>
+                                        <td style="width: 60%;"><span t-field="line.product_id.display_name"/></td>
+                                        <td class="text-center" style="width: 20%;"><span t-field="line.quantity"/> <span t-field="line.product_uom_id.name" groups="uom.group_uom"/></td>
+                                        <td class="text-center" style="width: 20%;"><span t-field="line.qty_done"/> <span t-field="line.product_uom_id.name" groups="uom.group_uom"/></td>
                                     </tr>
                                 </t>
                             </tbody>
