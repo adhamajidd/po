@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="action_report_custom_stock_picking" model="ir.actions.report">
-        <field name="name">Laporan Transfer (Custom)</field>
+        <field name="name">Laporan Transfer Dot Matrix</field>
         
         <field name="model">stock.picking</field>
         

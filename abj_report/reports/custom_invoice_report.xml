@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="action_report_custom_standalone_invoice" model="ir.actions.report">
-        <field name="name">Invoice (Custom Design)</field>
+        <field name="name">Invoice Dot Matrix</field>
         
         <field name="model">account.move</field>
         
